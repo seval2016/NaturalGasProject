@@ -16,7 +16,13 @@ const Topbar = () => (
         <div key={i} className="flex items-center gap-2 min-w-[180px]">
           {iconMap[item.icon]}
           <div>
-            <span className="font-bold text-gray-900 mr-1">{item.title}</span>
+            {item.icon === "FaPhoneAlt" ? (
+              <a href={`tel:${item.title.replace(/\s/g, '')}`} className="font-bold text-gray-900 mr-1 hover:text-[#1f84d6] transition-colors">
+                {item.title}
+              </a>
+            ) : (
+              <span className="font-bold text-gray-900 mr-1">{item.title}</span>
+            )}
             <span className="block text-gray-500 text-xs font-normal leading-tight">{item.desc}</span>
           </div>
         </div>
