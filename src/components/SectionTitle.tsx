@@ -1,12 +1,12 @@
 import React from 'react';
 
 interface SectionTitleProps {
-  label?: string;
+  label: string;
   title: string;
-  description?: string;
+  description: string;
 }
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ label, title, description }) => {
+const SectionTitle = ({ label, title, description }: SectionTitleProps) => {
   return (
     <div className="text-center mb-10">
       {label && (

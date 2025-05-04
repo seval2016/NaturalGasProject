@@ -3,13 +3,13 @@ import { FaPhoneAlt } from 'react-icons/fa';
 
 const ContactHero = () => {
   return (
-    <section className="container mx-auto px-4 py-16 flex flex-col md:flex-row items-center justify-between gap-4">
+    <section className="container mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
       {/* Left Side */}
       <div className="flex-1 max-w-xl">
         <p className="uppercase tracking-widest text-gray-500 mb-2 font-semibold">KALİTE GÜVENCESİ</p>
         <h1 className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4">İhtiyacınıza özel tesisat çözümleri</h1>
         <h2 className="text-xl font-medium mb-4 text-gray-700">Eviniz için en iyi tesisatı kuruyoruz</h2>
-        <p className="mb-8 text-gray-500">Eviniz için en iyi ve en güvenilir tesisat sistemlerini kuruyoruz.
+        <p className="mb-8 text-sm text-gray-500">Eviniz için en iyi ve en güvenilir tesisat sistemlerini kuruyoruz.
         Alanında uzman ekibimizle, yüksek kalite standartlarına uygun, uzun ömürlü çözümler sunuyoruz. İhtiyacınıza göre hızlı, temiz ve etkili hizmet anlayışıyla yanınızdayız.</p>
         <div className="flex items-center gap-4">
           <button className="px-8 py-3 rounded font-semibold hover:brightness-110 transition text-white" style={{ backgroundColor: '#1f84d6' }}>Hakkımızda</button>

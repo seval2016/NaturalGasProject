@@ -11,7 +11,7 @@ const images = [
 ];
 
 const FooterImages = () => (
-  <div className="w-full grid grid-cols-2 md:grid-cols-6">
+  <div className="w-full hidden md:grid grid-cols-2 md:grid-cols-6 pt-16">
     {images.map((img, i) => (
       <div key={i} className="h-56 overflow-hidden">
         <img src={img} alt="footer visual" className="w-full h-full object-cover" />
@@ -24,7 +24,7 @@ const Footer = () => {
   return (
     <>
       <FooterImages />
-      <footer className="bg-gray-900 text-white pt-0 relative min-h-[500px]">
+      <footer className="bg-gray-900 text-white relative min-h-[500px] pt-0 mt-16 md:mt-0">
         <div className="absolute inset-0 bg-[url('/images/home-bg.png')] opacity-60 z-10 bg-cover bg-center"></div>
         <div className="absolute inset-0 bg-gray-900 opacity-80 z-0"></div>
         {/* Alt iletişim ve sosyal medya */}

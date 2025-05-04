@@ -13,7 +13,7 @@ const features = [
 
 const About = () => {
   return (
-    <section className="container mx-auto px-4 py-16 flex flex-col md:flex-row items-center gap-12">
+    <section className="container mx-auto px-4 py-8 flex flex-col md:flex-row items-center gap-12">
       {/* Sol: Görsel */}
       <div className="flex-1 w-full max-w-md">
         <img
