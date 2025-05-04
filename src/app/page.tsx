@@ -9,11 +9,11 @@ export default function Home() {
     <div>
       <div className="py-3" />
       <Carousel slides={carouselData.slides} />
-      <div className="py-8" />
+      <div className="py-6" />
       <Services />
-      <div className="py-8" />
+      <div className="py-6" />
       <About />
-      <div className="py-8" />
+      <div className="py-6" />
       <ContactHero />
     </div>
   );

@@ -2,18 +2,18 @@ import React from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaDribbble } from 'react-icons/fa';
 
 const images = [
-  '/images/footer1.jpg',
-  '/images/footer2.jpg',
-  '/images/footer3.jpg',
-  '/images/footer4.jpg',
-  '/images/footer5.jpg',
-  '/images/footer6.jpg',
+  '/images/banner/galeri1.jpg',
+  '/images/banner/galeri2.jpg',
+  '/images/banner/galeri3.jpg',
+  '/images/banner/galeri4.jpg',
+  '/images/banner/galeri5.jpg',
+  '/images/banner/galeri6.jpg',
 ];
 
 const FooterImages = () => (
-  <div className="hidden md:flex w-full">
+  <div className="w-full grid grid-cols-2 md:grid-cols-6">
     {images.map((img, i) => (
-      <div key={i} className="flex-1 h-56 overflow-hidden">
+      <div key={i} className="h-56 overflow-hidden">
         <img src={img} alt="footer visual" className="w-full h-full object-cover" />
       </div>
     ))}
@@ -24,9 +24,11 @@ const Footer = () => {
   return (
     <>
       <FooterImages />
-      <footer className="bg-gray-900 text-white pt-0">
+      <footer className="bg-gray-900 text-white pt-0 relative min-h-[500px]">
+        <div className="absolute inset-0 bg-[url('/images/home-bg.png')] opacity-60 z-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-gray-900 opacity-80 z-0"></div>
         {/* Alt iletişim ve sosyal medya */}
-        <div className="container mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <div className="container mx-auto px-4 py-24 grid grid-cols-1 md:grid-cols-3 gap-8 items-start relative z-20">
           {/* Sol: Başlık */}
           <div className="md:col-span-1 flex flex-col justify-center mb-8 md:mb-0">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Plumbing services with<br />a quality guarantee</h2>

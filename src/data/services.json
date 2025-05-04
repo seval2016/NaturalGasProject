@@ -1,39 +1,38 @@
 [
   {
     "title": "Su Tesisatı",
-    "description": "Profesyonel su tesisatı hizmetleri ile sorunlarınıza çözüm sunuyoruz.",
+    "description": "Su kaçağı, boru döşeme ve arıza onarımı gibi tüm su tesisatı ihtiyaçlarınızda profesyonel çözümler sunuyoruz.",
     "image": "/images/services/su-tesisati.jpg",
     "icon": "FaFaucet"
   },
   {
     "title": "Kalorifer Tesisatı",
-    "description": "Modern ve verimli kalorifer tesisatı kurulum ve bakım hizmetleri.",
+    "description": "Kalorifer sistemlerinin kurulumu, bakımı ve onarımı ile konforlu ısınma çözümleri sağlıyoruz.",
     "image": "/images/services/kalorifer-tesisati.jpg",
     "icon": "FaFireAlt"
   },
   {
+    "title": "Yerden Isıtma Sistemi",
+    "description": "Enerji tasarruflu ve konforlu yerden ısıtma sistemleri ile modern yaşam alanları sunuyoruz.",
+    "image": "/images/services/banyo-tadilat.jpg",
+    "icon": "FaBath"
+  },
+  {
     "title": "Doğalgaz Proje",
-    "description": "Uzman ekibimizle doğalgaz projelerinizi hayata geçiriyoruz.",
+    "description": "Doğalgaz tesisatı projelendirme süreçlerinizi yasal mevzuatlara uygun şekilde uzman ekibimizle yürütüyoruz.",
     "image": "/images/services/dogalgaz-proje.jpg",
     "icon": "FaProjectDiagram"
   },
   {
     "title": "Doğalgaz Tesisatı",
-    "description": "Güvenli ve kaliteli doğalgaz tesisatı kurulum ve bakım hizmetleri.",
+    "description": "Eviniz veya iş yeriniz için güvenli, hızlı ve profesyonel doğalgaz tesisatı kurulum hizmeti veriyoruz.",
     "image": "/images/services/dogalgaz-tesisati.jpg",
     "icon": "FaGasPump"
   },
   {
     "title": "Banyo Tadilat",
-    "description": "Modern ve fonksiyonel banyo tadilat hizmetleri ile yaşam alanlarınızı yeniliyoruz.",
+    "description": "Banyonuzu baştan sona yenileyerek modern, estetik ve kullanışlı bir yaşam alanına dönüştürüyoruz.",
     "image": "/images/services/banyo-tadilat.jpg",
     "icon": "FaBath"
   }
-  ,
-  {
-    "title": "Banyo Tadilat",
-    "description": "Modern ve fonksiyonel banyo tadilat hizmetleri ile yaşam alanlarınızı yeniliyoruz.",
-    "image": "/images/services/banyo-tadilat.jpg",
-    "icon": "FaBath"
-  }
-] 
+]

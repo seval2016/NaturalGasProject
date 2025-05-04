@@ -2,21 +2,33 @@
   "slides": [
     {
       "id": 1,
-      "image": "/images/slide1.jpg",
+      "image": "/images/slide/slide1.jpg",
       "title": "Doğalgaz Tesisatı",
-      "description": "Profesyonel doğalgaz tesisatı kurulum hizmetleri"
+      "description": "Uzman ekibimizle, güvenli ve mevzuata uygun doğalgaz tesisatı kurulum hizmetleri sunuyoruz. Konforlu ve ekonomik ısınma için profesyonel çözümler sağlıyoruz."
     },
     {
       "id": 2,
-      "image": "/images/slide2.jpg",
+      "image": "/images/slide/slide2.jpg",
       "title": "Bakım ve Onarım",
-      "description": "Düzenli bakım ve acil onarım hizmetleri"
+      "description": "Tesisat sistemlerinizin sorunsuz çalışması için düzenli bakım ve acil durumlarda hızlı onarım hizmetleri sunuyoruz. Arızaları büyümeden önlemek bizim işimiz."
     },
     {
       "id": 3,
-      "image": "/images/slide3.jpg",
+      "image": "/images/slide/slide3.jpg",
       "title": "Danışmanlık",
-      "description": "Uzman danışmanlık hizmetleri"
+      "description": "Tesisat projelerinizde doğru kararlar almanız için teknik bilgiye dayalı danışmanlık hizmeti veriyoruz. Planlama ve uygulama süreçlerinde yanınızdayız."
+    },
+    {
+      "id": 4,
+      "image": "/images/slide/slide4.jpg",
+      "title": "Bakım ve Onarım",
+      "description": "Tesisat sistemlerinizin sorunsuz çalışması için düzenli bakım ve acil durumlarda hızlı onarım hizmetleri sunuyoruz. Arızaları büyümeden önlemek bizim işimiz."
+    },
+    {
+      "id": 5,
+      "image": "/images/slide/slide5.jpg",
+      "title": "Danışmanlık",
+      "description": "Tesisat projelerinizde doğru kararlar almanız için teknik bilgiye dayalı danışmanlık hizmeti veriyoruz. Planlama ve uygulama süreçlerinde yanınızdayız."
     }
   ]
-} 
+}

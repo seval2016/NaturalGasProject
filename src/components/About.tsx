@@ -3,12 +3,12 @@ import SectionTitle from './SectionTitle';
 import { FaCheckSquare } from 'react-icons/fa';
 
 const features = [
-  'Qualified team',
-  'Affordable pricing',
-  'Quick service',
-  '10+ years experience',
-  '100+ projects done',
-  'Plumbing Experts',
+  'Uzman ve nitelikli ekip',
+  'Uygun fiyat garantisi',
+  'Hızlı ve güvenilir hizmet',
+  '20+ yıl tecrübe',
+  '100+ tamamlanmış proje',
+  'Tesisat uzmanlığı',
 ];
 
 const About = () => {
@@ -25,9 +25,9 @@ const About = () => {
       {/* Sağ: İçerik */}
       <div className="flex-1 w-full">
         <SectionTitle
-          label="ABOUT US"
-          title="Plumbing is what we do"
-          description="We are an award winning plumbing company with over 20 years experience in the business. We provide a wide range of services for both residential and commercial clients."
+          label="HAKKIMIZDA"
+          title="Tesisat bizim işimiz"
+          description="20 yılı aşkın deneyimimizle hem bireysel hem de kurumsal müşterilerimize geniş hizmet yelpazesi sunuyoruz."
         />
         {/* Özellikler */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 mb-6 max-w-xl mx-auto">
@@ -39,7 +39,7 @@ const About = () => {
           ))}
         </div>
         <p className="text-gray-500 text-sm max-w-2xl mx-auto">
-          No job is too big or too small, we've got you covered. In addition to our services, you can check out our shop for a wide range of plumbing supplies and equipment. When it comes to plumbing we are your one stop shop.
+        Hiçbir iş bizim için ne çok büyük ne de çok küçük; her ihtiyacınızda yanınızdayız. Hizmetlerimizin yanı sıra, tesisat malzemeleri ve ekipmanları için mağazamızı da ziyaret edebilirsiniz. Tesisat konusunda ihtiyacınız olan her şey tek bir adreste!
         </p>
       </div>
     </section>

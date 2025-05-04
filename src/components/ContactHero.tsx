@@ -7,9 +7,10 @@ const ContactHero = () => {
       {/* Left Side */}
       <div className="flex-1 max-w-xl">
         <p className="uppercase tracking-widest text-gray-500 mb-2 font-semibold">KALİTE GÜVENCESİ</p>
-        <h1 className="text-5xl font-bold mb-4 leading-tight text-gray-900">Plumbing solutions on demand</h1>
+        <h1 className="text-5xl font-bold mb-4 leading-tight text-gray-900">İhtiyacınıza özel tesisat çözümleri</h1>
         <h2 className="text-xl font-medium mb-4 text-gray-700">Eviniz için en iyi tesisatı kuruyoruz</h2>
-        <p className="mb-8 text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non incididunt ut.</p>
+        <p className="mb-8 text-gray-500">Eviniz için en iyi ve en güvenilir tesisat sistemlerini kuruyoruz.
+        Alanında uzman ekibimizle, yüksek kalite standartlarına uygun, uzun ömürlü çözümler sunuyoruz. İhtiyacınıza göre hızlı, temiz ve etkili hizmet anlayışıyla yanınızdayız.</p>
         <div className="flex items-center gap-4">
           <button className="px-8 py-3 rounded font-semibold hover:brightness-110 transition text-white" style={{ backgroundColor: '#1f84d6' }}>Hakkımızda</button>
           <div className="flex items-center bg-gray-100 px-4 py-3 rounded">
