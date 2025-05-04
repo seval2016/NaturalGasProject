@@ -1,0 +1,22 @@
+{
+  "slides": [
+    {
+      "id": 1,
+      "image": "/images/slide1.jpg",
+      "title": "Doğalgaz Tesisatı",
+      "description": "Profesyonel doğalgaz tesisatı kurulum hizmetleri"
+    },
+    {
+      "id": 2,
+      "image": "/images/slide2.jpg",
+      "title": "Bakım ve Onarım",
+      "description": "Düzenli bakım ve acil onarım hizmetleri"
+    },
+    {
+      "id": 3,
+      "image": "/images/slide3.jpg",
+      "title": "Danışmanlık",
+      "description": "Uzman danışmanlık hizmetleri"
+    }
+  ]
+} 

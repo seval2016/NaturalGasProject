@@ -12,9 +12,13 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-blue-600">
-              Natural Gas
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-3">
+              <img src="/images/logo/logo2.png" alt="Logo" className="h-20 w-auto" />
+              <div className="flex flex-col leading-tight">
+                <span className="text-3xl font-semibold" style={{ color: '#1f84d6' }}>Şentürk</span>
+                <span className="text-xs font-medium text-gray-500 tracking-wide mt-0.5 ml-0.5">Sıhhi Tesisat</span>
+              </div>
             </Link>
           </div>
 
