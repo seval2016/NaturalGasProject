@@ -17,11 +17,11 @@ export default function Home() {
       <section id="anasayfa">
         <Carousel slides={carouselData.slides} />
       </section>
-      <div className="py-8" />
+      <div className="py-6" />
       <section id="hizmetler">
         <Services />
       </section>
-      <div className="py-8" />
+      <div className="py-6" />
       <section id="hakkimizda">
         <About />
       </section>

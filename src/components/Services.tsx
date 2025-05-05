@@ -5,12 +5,12 @@ import SectionTitle from './SectionTitle';
 import styles from '../styles/services.module.css';
 
 const iconMap: { [key: string]: React.ReactNode } = {
-  "tools": <FaTools />,
-  "wrench": <FaWrench />,
-  "gas": <FaGasPump />,
-  "water": <FaWater />,
-  "fire": <FaFire />,
-  "home": <FaHome />
+  "tools": <FaTools className={styles.icon} />,
+  "wrench": <FaWrench className={styles.icon} />,
+  "gas": <FaGasPump className={styles.icon} />,
+  "water": <FaWater className={styles.icon} />,
+  "fire": <FaFire className={styles.icon} />,
+  "home": <FaHome className={styles.icon} />
 };
 
 const Services = () => {
@@ -47,4 +47,4 @@ const Services = () => {
   );
 };
 
-export default Services; 
+export default Services;

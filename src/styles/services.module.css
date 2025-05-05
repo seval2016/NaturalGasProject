@@ -23,7 +23,7 @@
 }
 
 .icon {
-  @apply w-6 h-6 text-blue-600;
+  @apply text-[#1f84d6] w-6 h-6;
 }
 
 .content {
