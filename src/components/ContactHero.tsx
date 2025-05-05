@@ -28,10 +28,6 @@ const ContactHero = () => {
         onClose={() => setModalOpen(false)}
         images={worksData.images}
       />
-          <div className="flex items-center bg-gray-100 px-4 py-3 rounded">
-            <FaPhoneAlt className="mr-2" style={{ color: '#1f84d6' }} />
-            <span className="font-medium text-gray-800">0 800 555 44 33</span>
-          </div>
         </div>
       </div>
       {/* Right Side - Görseller üst üste bindirilmiş */}

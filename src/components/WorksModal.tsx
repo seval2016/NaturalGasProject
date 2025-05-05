@@ -7,7 +7,7 @@ interface WorksModalProps {
   images: string[];
 }
 
-const WorksModal: React.FC<WorksModalProps> = ({ isOpen, onClose, images }) => {
+const WorksModal = ({ isOpen, onClose, images }: WorksModalProps) => {
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState<null | number>(null);
 

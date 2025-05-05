@@ -12,7 +12,7 @@ const SectionTitle = ({ label, title, description }: SectionTitleProps) => {
       {label && (
         <div className="flex items-center justify-center mb-2">
           <span className="inline-block w-8 h-1 bg-red-500 rounded mr-2" />
-          <span className="uppercase text-blue-700 font-bold tracking-wider text-sm">{label}</span>
+          <span className="uppercase font-bold tracking-wider text-sm text-[#1f84d6]">{label}</span>
           <span className="inline-block w-8 h-1 bg-red-500 rounded ml-2" />
         </div>
       )}
