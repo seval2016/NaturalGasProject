@@ -1,6 +1,7 @@
 import React from 'react';
 import SectionTitle from './SectionTitle';
 import { FaCheckSquare } from 'react-icons/fa';
+import styles from '../styles/about.module.css';
 
 const features = [
   'Uzman ve nitelikli ekip',
@@ -13,33 +14,33 @@ const features = [
 
 const About = () => {
   return (
-    <section className="container mx-auto px-4 py-8 flex flex-col md:flex-row items-center gap-12">
+    <section className={styles.section}>
       {/* Sol: Görsel */}
-      <div className="flex-1 w-full max-w-md">
+      <div className={styles.imageContainer}>
         <img
           src="/images/about.jpg"
           alt="About us"
-          className="w-full h-auto object-cover rounded-2xl shadow-lg"
+          className={styles.image}
         />
       </div>
       {/* Sağ: İçerik */}
-      <div className="flex-1 w-full">
+      <div className={styles.content}>
         <SectionTitle
           label="HAKKIMIZDA"
           title="Tesisat bizim işimiz"
           description="20 yılı aşkın deneyimimizle hem bireysel hem de kurumsal müşterilerimize geniş hizmet yelpazesi sunuyoruz."
         />
         {/* Özellikler */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 mb-6 max-w-xl mx-auto">
+        <div className={styles.features}>
           {features.map((feature, i) => (
-            <div key={i} className="flex items-center text-gray-700 text-base mb-2">
-              <FaCheckSquare className="text-[#1f84d6] mr-2" />
+            <div key={i} className={styles.feature}>
+              <FaCheckSquare className={styles.featureIcon} />
               {feature}
             </div>
           ))}
         </div>
-        <p className="text-gray-500 text-sm max-w-2xl mx-auto">
-        Hiçbir iş bizim için ne çok büyük ne de çok küçük; her ihtiyacınızda yanınızdayız. Hizmetlerimizin yanı sıra, tesisat malzemeleri ve ekipmanları için mağazamızı da ziyaret edebilirsiniz. Tesisat konusunda ihtiyacınız olan her şey tek bir adreste!
+        <p className={styles.description}>
+          Hiçbir iş bizim için ne çok büyük ne de çok küçük; her ihtiyacınızda yanınızdayız. Hizmetlerimizin yanı sıra, tesisat malzemeleri ve ekipmanları için mağazamızı da ziyaret edebilirsiniz. Tesisat konusunda ihtiyacınız olan her şey tek bir adreste!
         </p>
       </div>
     </section>

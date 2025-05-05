@@ -1,0 +1,43 @@
+.section {
+  @apply container mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4;
+}
+
+.leftSide {
+  @apply flex-1 max-w-xl;
+}
+
+.subtitle {
+  @apply uppercase tracking-widest text-gray-500 mb-2 font-semibold;
+}
+
+.title {
+  @apply text-2xl md:text-4xl font-semibold text-gray-900 mb-4;
+}
+
+.subtitle2 {
+  @apply text-xl font-medium mb-4 text-gray-700;
+}
+
+.description {
+  @apply mb-8 text-sm text-gray-500;
+}
+
+.buttonContainer {
+  @apply flex items-center gap-4;
+}
+
+.button {
+  @apply bg-[#1f84d6] text-white px-8 py-3 rounded-lg font-semibold shadow transition hover:bg-[#176bb3];
+}
+
+.rightSide {
+  @apply flex-1 flex justify-center items-center relative min-w-[500px] min-h-[500px];
+}
+
+.backImage {
+  @apply w-[450px] h-[450px] object-cover shadow-lg absolute top-0 right-0 md:translate-x-16 md:-translate-y-12 z-10 transition-all duration-300;
+}
+
+.frontImage {
+  @apply w-[400px] h-[400px] object-cover shadow-xl relative z-20;
+} 

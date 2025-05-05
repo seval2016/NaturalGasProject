@@ -1,0 +1,95 @@
+.header {
+  @apply bg-white shadow-md fixed top-0 left-0 w-full z-50;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.navContainer {
+  @apply flex justify-between items-center h-16;
+}
+
+.logoContainer {
+  @apply flex items-center space-x-3 flex-shrink-0;
+}
+
+.logoLink {
+  @apply flex items-center space-x-3;
+}
+
+.logoImage {
+  @apply h-20 w-auto;
+}
+
+.logoText {
+  @apply flex flex-col leading-tight;
+}
+
+.logoTitle {
+  @apply text-3xl font-semibold;
+}
+
+.logoSubtitle {
+  @apply text-xs font-medium text-gray-500 tracking-wide mt-0.5 ml-0.5;
+}
+
+.desktopNav {
+  @apply hidden md:flex space-x-8 items-center;
+}
+
+.navLink {
+  @apply text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium;
+}
+
+.contactButtons {
+  @apply flex items-center ml-8 gap-1;
+}
+
+.phoneButton {
+  @apply flex items-center gap-1 px-2 py-1 rounded bg-[#1f84d6] text-white text-sm font-semibold transition shadow hover:bg-[#176bb3];
+}
+
+.whatsappButton {
+  @apply flex items-center gap-1 px-2 py-1 rounded bg-green-500 text-white text-sm font-semibold transition shadow hover:bg-[#198f3e];
+}
+
+.mobileMenuButton {
+  @apply md:hidden;
+}
+
+.menuButton {
+  @apply inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none;
+}
+
+.mobileNav {
+  @apply md:hidden;
+}
+
+.mobileNavContainer {
+  @apply px-2 pt-2 pb-3 space-y-1 sm:px-3;
+}
+
+.mobileNavLink {
+  @apply block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium;
+}
+
+.mobileContactButtons {
+  @apply flex md:hidden items-center gap-2;
+}
+
+.mobilePhoneButton {
+  @apply p-2 rounded-full bg-[#1f84d6] text-white hover:bg-blue-700 transition;
+}
+
+.mobileWhatsappButton {
+  @apply p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition;
+}
+
+.icon {
+  @apply w-4 h-4;
+}
+
+.mobileIcon {
+  @apply w-5 h-5;
+} 

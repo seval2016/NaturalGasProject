@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../styles/sectionTitle.module.css';
 
 interface SectionTitleProps {
   label: string;
@@ -8,17 +9,17 @@ interface SectionTitleProps {
 
 const SectionTitle = ({ label, title, description }: SectionTitleProps) => {
   return (
-    <div className="text-center mb-10">
+    <div className={styles.container}>
       {label && (
-        <div className="flex items-center justify-center mb-2">
-          <span className="inline-block w-8 h-1 bg-red-500 rounded mr-2" />
-          <span className="uppercase font-bold tracking-wider text-sm text-[#1f84d6]">{label}</span>
-          <span className="inline-block w-8 h-1 bg-red-500 rounded ml-2" />
+        <div className={styles.labelContainer}>
+          <span className={styles.line} />
+          <span className={styles.label}>{label}</span>
+          <span className={styles.line} />
         </div>
       )}
-      <h2 className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4">{title}</h2>
+      <h2 className={styles.title}>{title}</h2>
       {description && (
-        <p className="text-gray-500 text-sm max-w-2xl mx-auto">{description}</p>
+        <p className={styles.description}>{description}</p>
       )}
     </div>
   );

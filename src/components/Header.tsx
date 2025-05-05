@@ -3,65 +3,66 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
+import styles from '../styles/header.module.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <div className={styles.navContainer}>
           {/* Logo */}
-          <div className="flex items-center space-x-3 flex-shrink-0">
-            <Link href="/" className="flex items-center space-x-3">
-              <img src="/images/logo/logo2.png" alt="Logo" className="h-20 w-auto" />
-              <div className="flex flex-col leading-tight">
-                <span className="text-3xl font-semibold" style={{ color: '#1f84d6' }}>Şentürk</span>
-                <span className="text-xs font-medium text-gray-500 tracking-wide mt-0.5 ml-0.5">Sıhhi Tesisat</span>
+          <div className={styles.logoContainer}>
+            <Link href="/" className={styles.logoLink}>
+              <img src="/images/logo/logo2.png" alt="Logo" className={styles.logoImage} />
+              <div className={styles.logoText}>
+                <span className={styles.logoTitle} style={{ color: '#1f84d6' }}>Şentürk</span>
+                <span className={styles.logoSubtitle}>Sıhhi Tesisat</span>
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8 items-center">
-            <a href="#anasayfa" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+          <nav className={styles.desktopNav}>
+            <a href="#anasayfa" className={styles.navLink}>
               Ana Sayfa
             </a>
-            <a href="#hakkimizda" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+            <a href="#hakkimizda" className={styles.navLink}>
               Hakkımızda
             </a>
-            <a href="#hizmetler" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+            <a href="#hizmetler" className={styles.navLink}>
               Hizmetler
             </a>
-            <a href="#iletisim" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+            <a href="#iletisim" className={styles.navLink}>
               İletişim
             </a>
             {/* Desktop Phone and WhatsApp Buttons */}
-            <div className="flex items-center ml-8 gap-1">
+            <div className={styles.contactButtons}>
               <button
                 onClick={() => window.open('tel:05424017904')}
-                className="flex items-center gap-1 px-2 py-1 rounded bg-[#1f84d6] text-white text-sm font-semibold hover:bg-blue-700 transition shadow"
+                className={styles.phoneButton}
                 title="Telefon ile Ara"
               >
-                <FaPhoneAlt className="w-4 h-4" />
+                <FaPhoneAlt className={styles.icon} />
                 <span>Ara</span>
               </button>
               <button
                 onClick={() => window.open('https://wa.me/905424017904', '_blank')}
-                className="flex items-center gap-1 px-2 py-1 rounded bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition shadow"
+                className={styles.whatsappButton}
                 title="WhatsApp ile İletişim"
               >
-                <FaWhatsapp className="w-4 h-4" />
+                <FaWhatsapp className={styles.icon} />
                 <span>WhatsApp</span>
               </button>
             </div>
           </nav>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className={styles.mobileMenuButton}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none"
+              className={styles.menuButton}
             >
               <span className="sr-only">Open main menu</span>
               {!isMenuOpen ? <FaBars className="h-6 w-6" /> : <FaTimes className="h-6 w-6" />}
@@ -72,36 +73,36 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link href="/" className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">
+        <div className={styles.mobileNav}>
+          <div className={styles.mobileNavContainer}>
+            <Link href="/" className={styles.mobileNavLink}>
               Ana Sayfa
             </Link>
-            <Link href="/about" className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">
+            <Link href="/about" className={styles.mobileNavLink}>
               Hakkımızda
             </Link>
-            <Link href="/services" className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">
+            <Link href="/services" className={styles.mobileNavLink}>
               Hizmetler
             </Link>
-            <Link href="/contact" className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">
+            <Link href="/contact" className={styles.mobileNavLink}>
               İletişim
             </Link>
           </div>
           {/* Mobile Phone and WhatsApp Buttons */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className={styles.mobileContactButtons}>
             <button
               onClick={() => window.open('tel:05424017904')}
-              className="p-2 rounded-full bg-[#1f84d6] text-white hover:bg-blue-700 transition"
+              className={styles.mobilePhoneButton}
               title="Telefon ile Ara"
             >
-              <FaPhoneAlt className="w-5 h-5" />
+              <FaPhoneAlt className={styles.mobileIcon} />
             </button>
             <button
               onClick={() => window.open('https://wa.me/905424017904', '_blank')}
-              className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition"
+              className={styles.mobileWhatsappButton}
               title="WhatsApp ile İletişim"
             >
-              <FaWhatsapp className="w-5 h-5" />
+              <FaWhatsapp className={styles.mobileIcon} />
             </button>
           </div>
         </div>

@@ -1,0 +1,101 @@
+.footerImages {
+  @apply w-full hidden md:grid grid-cols-2 md:grid-cols-6 pt-8 md:pt-16;
+}
+
+.imageContainer {
+  @apply h-32 md:h-56 overflow-hidden;
+}
+
+.image {
+  @apply w-full h-full object-cover;
+}
+
+.footer {
+  @apply bg-gray-900 text-white relative w-full;
+  min-height: 500px;
+}
+
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/images/home-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+  z-index: 10;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #111827;
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4;
+}
+
+.content {
+  @apply container mx-auto px-2 md:px-4 py-12 md:py-24 grid grid-cols-1 md:grid-cols-3 gap-8 items-start justify-items-center relative z-20;
+}
+
+.titleSection {
+  @apply md:col-span-1 flex flex-col justify-center mb-8 md:mb-0 items-center;
+}
+
+.logo {
+  @apply h-16 md:h-24 w-auto mb-2;
+}
+
+.title {
+  @apply text-lg md:text-2xl text-base text-center;
+}
+
+.addressSection {
+  @apply md:col-span-1 mb-8 md:mb-0 flex flex-col items-start text-left;
+}
+
+.sectionTitle {
+  @apply font-bold mb-2;
+}
+
+.addressText {
+  @apply mb-1;
+}
+
+.location {
+  @apply mb-4;
+}
+
+.socialLinks {
+  @apply flex space-x-4 mt-4;
+}
+
+.socialLink {
+  @apply w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-blue-600 transition;
+}
+
+.contactSection {
+  @apply md:col-span-1 flex flex-col items-center text-center;
+}
+
+.phone {
+  @apply text-xl mb-4;
+}
+
+.bottomBar {
+  @apply container mx-auto md:pe-24 pb-4 flex flex-col md:flex-row items-center justify-between border-t border-gray-800 pt-6;
+}
+
+.copyright {
+  @apply text-gray-400 text-sm mt-2 md:mt-0;
+} 
