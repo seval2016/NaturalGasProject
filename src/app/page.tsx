@@ -25,7 +25,7 @@ export default function Home() {
       <section id="hakkimizda">
         <About />
       </section>
-      <div className="py-8" />
+      <div className="py-6" />
       <section id="iletisim">
         <ContactHero />
       </section>

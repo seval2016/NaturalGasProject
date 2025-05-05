@@ -1,16 +1,15 @@
 import React from 'react';
 import servicesData from '../data/services.json';
-import { FaTools, FaWrench, FaGasPump, FaWater, FaFire, FaHome } from 'react-icons/fa';
+import { FaFaucet, FaFireAlt, FaBath, FaProjectDiagram, FaGasPump } from 'react-icons/fa';
 import SectionTitle from './SectionTitle';
 import styles from '../styles/services.module.css';
 
 const iconMap: { [key: string]: React.ReactNode } = {
-  "tools": <FaTools className={styles.icon} />,
-  "wrench": <FaWrench className={styles.icon} />,
-  "gas": <FaGasPump className={styles.icon} />,
-  "water": <FaWater className={styles.icon} />,
-  "fire": <FaFire className={styles.icon} />,
-  "home": <FaHome className={styles.icon} />
+  "FaFaucet": <FaFaucet className={styles.icon} />,
+  "FaFireAlt": <FaFireAlt className={styles.icon} />,
+  "FaBath": <FaBath className={styles.icon} />,
+  "FaProjectDiagram": <FaProjectDiagram className={styles.icon} />,
+  "FaGasPump": <FaGasPump className={styles.icon} />
 };
 
 const Services = () => {
@@ -31,9 +30,7 @@ const Services = () => {
                 className={`${styles.image} group-hover:scale-110`}
               />
               <div className={styles.iconContainer}>
-                <div className={styles.icon}>
-                  {iconMap[service.icon]}
-                </div>
+                {iconMap[service.icon]}
               </div>
             </div>
             <div className={styles.content}>
