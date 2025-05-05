@@ -43,7 +43,7 @@
 }
 
 .button {
-  @apply bg-white text-black text-sm md:text-base px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-300;
+  @apply bg-white text-[#1f84d6] text-sm md:text-base px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-300;
 }
 
 .navButton {
