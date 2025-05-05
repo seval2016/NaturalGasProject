@@ -24,6 +24,19 @@ const nextConfig = {
     importLoaders: 1,
     localIdentName: '[local]___[hash:base64:5]',
   },
+  // Hydration sorunlarını çözmek için
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+  // Client-side hydration sorunlarını çözmek için
+  webpackDevMiddleware: (config) => {
+    config.watchOptions = {
+      poll: 1000,
+      aggregateTimeout: 300,
+    };
+    return config;
+  },
 }
 
 module.exports = nextConfig
