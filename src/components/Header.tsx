@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import styles from '../styles/header.module.css';
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className={styles.header}>
@@ -25,18 +27,46 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className={styles.desktopNav}>
-            <a href="#anasayfa" className={styles.navLink}>
+            <Link
+              href="/"
+              className={`${
+                pathname === '/'
+                  ? 'border-blue-500 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+            >
               Ana Sayfa
-            </a>
-            <a href="#hakkimizda" className={styles.navLink}>
-              Hakkımızda
-            </a>
-            <a href="#hizmetler" className={styles.navLink}>
+            </Link>
+            <Link
+              href="/hizmetler"
+              className={`${
+                pathname === '/hizmetler'
+                  ? 'border-blue-500 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+            >
               Hizmetler
-            </a>
-            <a href="#iletisim" className={styles.navLink}>
+            </Link>
+            <Link
+              href="/hakkimizda"
+              className={`${
+                pathname === '/hakkimizda'
+                  ? 'border-blue-500 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+            >
+              Hakkımızda
+            </Link>
+            <Link
+              href="/iletisim"
+              className={`${
+                pathname === '/iletisim'
+                  ? 'border-blue-500 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+            >
               İletişim
-            </a>
+            </Link>
             {/* Desktop Phone and WhatsApp Buttons */}
             <div className={styles.contactButtons}>
               <button
