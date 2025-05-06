@@ -27,7 +27,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-24">
       <div className="bg-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
         <p className="text-gray-600 mb-6">
