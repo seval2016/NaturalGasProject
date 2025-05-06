@@ -92,6 +92,20 @@ export default function AdminLayout({
               </svg>
               Kullanıcılar
             </Link>
+
+            <Link
+              href="/admin/slider"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                pathname === '/admin/slider'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              Slider Yönetimi
+            </Link>
           </nav>
 
           {/* User Info & Logout */}
