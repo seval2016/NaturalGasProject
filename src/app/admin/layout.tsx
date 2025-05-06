@@ -80,20 +80,6 @@ export default function AdminLayout({
             </Link>
 
             <Link
-              href="/admin/users"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
-                pathname === '/admin/users'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              Kullanıcılar
-            </Link>
-
-            <Link
               href="/admin/slider"
               className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
                 pathname === '/admin/slider'
@@ -105,6 +91,21 @@ export default function AdminLayout({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
               </svg>
               Slider Yönetimi
+            </Link>
+
+            <Link
+              href="/admin/services"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                pathname === '/admin/services'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Hizmetler
             </Link>
           </nav>
 

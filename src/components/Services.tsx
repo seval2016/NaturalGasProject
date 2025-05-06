@@ -1,8 +1,17 @@
-import React from 'react';
-import servicesData from '../data/services.json';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { FaFaucet, FaFireAlt, FaBath, FaProjectDiagram, FaGasPump } from 'react-icons/fa';
 import SectionTitle from './SectionTitle';
 import styles from '../styles/services.module.css';
+
+interface Service {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  icon: string;
+}
 
 const iconMap: { [key: string]: React.ReactNode } = {
   "FaFaucet": <FaFaucet className={styles.icon} />,
@@ -13,6 +22,30 @@ const iconMap: { [key: string]: React.ReactNode } = {
 };
 
 const Services = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/api/admin/services');
+        if (!response.ok) throw new Error('Hizmet verileri alınamadı');
+        const data = await response.json();
+        setServices(data);
+      } catch (err) {
+        console.error('Hizmet verileri yüklenirken hata:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  if (loading) {
+    return <div>Yükleniyor...</div>;
+  }
+
   return (
     <section className={styles.section}>
       <SectionTitle
@@ -21,8 +54,8 @@ const Services = () => {
         description="Hem bireysel hem de kurumsal müşterilerimize yönelik geniş kapsamlı tesisat hizmetleri sunuyoruz. En karmaşık sorunlarda bile etkili ve güvenilir çözümlerle yanınızdayız."
       />
       <div className={`${styles.gridContainer} grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8`}>
-        {servicesData.map((service, index) => (
-          <div key={index} className={`${styles.card} group`}>
+        {services.map((service) => (
+          <div key={service.id} className={`${styles.card} group`}>
             <div className={styles.imageContainer}>
               <img
                 src={service.image}
