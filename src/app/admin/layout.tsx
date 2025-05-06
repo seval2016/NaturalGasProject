@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -53,78 +53,79 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Admin Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <Link href="/admin" className="text-xl font-bold text-blue-600">
-                  Admin Panel
-                </Link>
+      {/* Sidebar */}
+      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="flex items-center justify-center h-16 border-b">
+            <Link href="/admin" className="text-xl font-bold text-gray-800">
+              Admin Panel
+            </Link>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-4 space-y-1">
+            <Link
+              href="/admin"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                pathname === '/admin'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Dashboard
+            </Link>
+
+            <Link
+              href="/admin/users"
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                pathname === '/admin/users'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              Kullanıcılar
+            </Link>
+          </nav>
+
+          {/* User Info & Logout */}
+          <div className="p-4 border-t">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0">
+                <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                  {session.user?.name?.[0]?.toUpperCase()}
+                </div>
               </div>
-              <nav className="ml-6 flex space-x-8">
-                <Link
-                  href="/admin"
-                  className={`${
-                    pathname === '/admin'
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/admin/users"
-                  className={`${
-                    pathname === '/admin/users'
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                >
-                  Kullanıcılar
-                </Link>
-                <Link
-                  href="/admin/posts"
-                  className={`${
-                    pathname === '/admin/posts'
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                >
-                  Yazılar
-                </Link>
-                <Link
-                  href="/admin/images"
-                  className={`${
-                    pathname === '/admin/images'
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                >
-                  Medya
-                </Link>
-              </nav>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-700">{session.user?.name}</p>
+                <p className="text-xs text-gray-500">{session.user?.email}</p>
+              </div>
             </div>
-            <div className="flex items-center">
-              <span className="text-gray-700 mr-4">
-                Hoş geldiniz, {session.user?.name}
-              </span>
-              <button
-                onClick={() => router.push('/')}
-                className="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Siteye Dön
-              </button>
-            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="w-full flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md"
+            >
+              <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Çıkış Yap
+            </button>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+      <div className="pl-64">
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          {children}
+        </main>
+      </div>
     </div>
   );
 } 
