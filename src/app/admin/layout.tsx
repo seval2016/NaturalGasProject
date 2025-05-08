@@ -4,7 +4,8 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaHome, FaImages, FaEnvelope, FaBriefcase, FaCogs, FaBell, FaUser, FaSignOutAlt, FaCog, FaUserCircle, FaUsers } from 'react-icons/fa';
+import { FaHome, FaImages, FaEnvelope, FaBriefcase, FaCogs, FaBell, FaUser, FaSignOutAlt, FaCog, FaUserCircle, FaUsers, FaBars, FaTimes, FaGasPump } from 'react-icons/fa';
+import Image from 'next/image';
 
 export default function AdminLayout({
   children,
@@ -15,6 +16,7 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Dropdown dışına tıklandığında kapatma
   useEffect(() => {
@@ -51,52 +53,100 @@ export default function AdminLayout({
 
   return (
     <div className="flex h-screen bg-gray-100">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md">
-        <div className="p-4">
-          <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+      <div className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-blue-600 to-blue-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:transform-none ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}>
+        <div className="p-4 flex justify-between items-center border-b border-blue-500/20">
+          <div className="flex items-center space-x-3">
+            <div className="bg-white p-2 rounded-lg">
+              <Image
+                src="/images/logo/logo.png"
+                alt="Natural Gas Logo"
+                width={48}
+                height={48}
+                className="w-12 h-12"
+              />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+              <p className="text-sm text-blue-100">Şentürk Sıhhi Tesisat</p>
+            </div>
+          </div>
+          <button 
+            className="lg:hidden p-2 text-white hover:text-blue-200"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <FaTimes className="w-5 h-5" />
+          </button>
         </div>
         <nav className="mt-4">
           <Link
             href="/admin"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
+              pathname === '/admin' ? 'bg-blue-500/30' : ''
+            }`}
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <FaHome className="w-5 h-5 mr-2" />
+            <FaHome className="w-5 h-5 mr-3" />
             <span>Ana Sayfa</span>
           </Link>
           <Link
             href="/admin/slider"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
+              pathname === '/admin/slider' ? 'bg-blue-500/30' : ''
+            }`}
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <FaImages className="w-5 h-5 mr-2" />
+            <FaImages className="w-5 h-5 mr-3" />
             <span>Slider</span>
           </Link>
           <Link
             href="/admin/services"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
+              pathname === '/admin/services' ? 'bg-blue-500/30' : ''
+            }`}
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <FaCogs className="w-5 h-5 mr-2" />
+            <FaCogs className="w-5 h-5 mr-3" />
             <span>Hizmetler</span>
           </Link>
           <Link
             href="/admin/works"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
+              pathname === '/admin/works' ? 'bg-blue-500/30' : ''
+            }`}
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <FaBriefcase className="w-5 h-5 mr-2" />
+            <FaBriefcase className="w-5 h-5 mr-3" />
             <span>Çalışmalar</span>
           </Link>
           <Link
             href="/admin/contact"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
+              pathname === '/admin/contact' ? 'bg-blue-500/30' : ''
+            }`}
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <FaEnvelope className="w-5 h-5 mr-2" />
+            <FaEnvelope className="w-5 h-5 mr-3" />
             <span>İletişim</span>
           </Link>
           <Link
             href="/admin/users"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
+              pathname === '/admin/users' ? 'bg-blue-500/30' : ''
+            }`}
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <FaUsers className="w-5 h-5 mr-2" />
+            <FaUsers className="w-5 h-5 mr-3" />
             <span>Kullanıcılar</span>
           </Link>
         </nav>
@@ -109,11 +159,22 @@ export default function AdminLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center">
+                <button 
+                  className="lg:hidden p-2 text-gray-500 hover:text-gray-700 mr-2"
+                  onClick={() => setIsSidebarOpen(true)}
+                >
+                  <FaBars className="w-5 h-5" />
+                </button>
                 <h2 className="text-lg font-semibold text-gray-800">
-                  {pathname === '/admin' ? 'Dashboard' : 
+                  {pathname === '/admin' ? 'Gösterge Paneli' : 
+                   pathname === '/admin/slider' ? 'Slider' :
+                   pathname === '/admin/services' ? 'Hizmetler' :
                    pathname === '/admin/works' ? 'Çalışmalar' :
-                   (pathname?.split('/').pop() || 'Sayfa').charAt(0).toUpperCase() + 
-                   (pathname?.split('/').pop() || 'Sayfa').slice(1)}
+                   pathname === '/admin/contact' ? 'İletişim' :
+                   pathname === '/admin/users' ? 'Kullanıcılar' :
+                   pathname === '/admin/profile' ? 'Profil' :
+                   pathname === '/admin/settings' ? 'Ayarlar' :
+                   'Sayfa'}
                 </h2>
               </div>
               
@@ -133,7 +194,7 @@ export default function AdminLayout({
                       <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                         <FaUser className="w-4 h-4 text-blue-600" />
                       </div>
-                      <div className="text-sm text-left">
+                      <div className="hidden sm:block text-sm text-left">
                         <p className="font-medium text-gray-700">{session.user?.name}</p>
                         <p className="text-gray-500">{session.user?.email}</p>
                       </div>
@@ -180,7 +241,7 @@ export default function AdminLayout({
         </header>
 
         <main className="flex-1 overflow-y-auto bg-gray-100">
-          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             {children}
           </div>
         </main>
@@ -188,7 +249,7 @@ export default function AdminLayout({
         {/* Footer */}
         <footer className="bg-white border-t border-gray-200 py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
               <div className="text-sm text-gray-500">
                 © {new Date().getFullYear()} Natural Gas Admin Panel
               </div>

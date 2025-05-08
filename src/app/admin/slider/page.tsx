@@ -164,7 +164,7 @@ export default function SliderPage() {
             resetForm();
             setShowForm(true);
           }}
-          className="text-sm font-medium inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="text-sm font-medium inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
         >
           <FaPlus className="mr-2" />
           Yeni Slider Ekle 
@@ -175,13 +175,13 @@ export default function SliderPage() {
       {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">{success}</div>}
       
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Görsel
               </label>
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6">
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6">
                 {previewImage ? (
                   <div className="relative">
                     <img
@@ -195,7 +195,7 @@ export default function SliderPage() {
                         setPreviewImage(null);
                         setFile(null);
                       }}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -214,7 +214,7 @@ export default function SliderPage() {
                     />
                     <label
                       htmlFor="file-upload"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer transition-colors"
                     >
                       <FaPlus className="mr-2" />
                       Görsel Seç
@@ -248,73 +248,60 @@ export default function SliderPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={3}
+                rows={4}
                 placeholder="Slider açıklaması"
               />
             </div>
 
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-4">
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
               >
                 İptal
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
               >
-                {isUpdateMode ? 'Güncelle' : 'Ekle'}
+                {isUpdateMode ? 'Güncelle' : 'Kaydet'}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="p-6 border-b">
-          <h2 className="text-lg font-semibold">Mevcut Sliderlar</h2>
-        </div>
-        {slides.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">Henüz slider eklenmemiş</p>
-        ) : (
-          <div className="divide-y">
-            {slides.map((slide) => (
-              <div key={slide.id} className="p-6 flex items-center justify-between hover:bg-gray-50">
-                <div className="flex items-center space-x-4">
-                  <div className="relative w-32 h-20">
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="object-cover rounded w-full h-full"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">{slide.title}</h3>
-                    <p className="text-sm text-gray-500 line-clamp-2">{slide.description}</p>
-                  </div>
-                </div>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => handleUpdate(slide)}
-                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                    title="Düzenle"
-                  >
-                    <FaEdit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(slide.id)}
-                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                    title="Sil"
-                  >
-                    <FaTrash className="w-4 h-4" />
-                  </button>
-                </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {slides.map((slide) => (
+          <div key={slide.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="relative">
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 flex space-x-2">
+                <button
+                  onClick={() => handleUpdate(slide)}
+                  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                >
+                  <FaEdit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(slide.id)}
+                  className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                >
+                  <FaTrash className="w-4 h-4" />
+                </button>
               </div>
-            ))}
+            </div>
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">{slide.title}</h3>
+              <p className="text-gray-600 text-sm">{slide.description}</p>
+            </div>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

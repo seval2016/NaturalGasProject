@@ -100,13 +100,13 @@ export default function ContactPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-6">İletişim Bilgileri</h2>
         
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-700 font-medium">Hata</p>
-            <p className="text-red-600">{error}</p>
+            <p className="text-red-600 whitespace-pre-line">{error}</p>
           </div>
         )}
         
@@ -118,7 +118,7 @@ export default function ContactPage() {
         )}
         
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Telefon <span className="text-red-500">*</span>
@@ -253,7 +253,7 @@ export default function ContactPage() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
               Kaydet
             </button>
