@@ -62,12 +62,12 @@ export default function AdminLayout({
       )}
 
       {/* Sidebar */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-blue-600 to-blue-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:transform-none ${
+      <div className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:transform-none ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
-        <div className="p-4 flex justify-between items-center border-b border-blue-500/20">
-          <div className="flex items-center space-x-3">
-            <div className="bg-white p-2 rounded-lg">
+        <div className="p-6 border-b border-gray-100">
+          <div className="flex items-center space-x-4">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-xl shadow-sm">
               <Image
                 src="/images/logo/logo.png"
                 alt="Natural Gas Logo"
@@ -77,22 +77,16 @@ export default function AdminLayout({
               />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Admin Panel</h1>
-              <p className="text-sm text-blue-100">Şentürk Sıhhi Tesisat</p>
+              <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+              <p className="text-sm text-gray-500">Şentürk Sıhhi Tesisat</p>
             </div>
           </div>
-          <button 
-            className="lg:hidden p-2 text-white hover:text-blue-200"
-            onClick={() => setIsSidebarOpen(false)}
-          >
-            <FaTimes className="w-5 h-5" />
-          </button>
         </div>
-        <nav className="mt-4">
+        <nav className="mt-4 px-4">
           <Link
             href="/admin"
-            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
-              pathname === '/admin' ? 'bg-blue-500/30' : ''
+            className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors ${
+              pathname === '/admin' ? 'bg-blue-50 text-blue-600' : ''
             }`}
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -101,8 +95,8 @@ export default function AdminLayout({
           </Link>
           <Link
             href="/admin/slider"
-            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
-              pathname === '/admin/slider' ? 'bg-blue-500/30' : ''
+            className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors ${
+              pathname === '/admin/slider' ? 'bg-blue-50 text-blue-600' : ''
             }`}
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -111,8 +105,8 @@ export default function AdminLayout({
           </Link>
           <Link
             href="/admin/services"
-            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
-              pathname === '/admin/services' ? 'bg-blue-500/30' : ''
+            className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors ${
+              pathname === '/admin/services' ? 'bg-blue-50 text-blue-600' : ''
             }`}
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -121,8 +115,8 @@ export default function AdminLayout({
           </Link>
           <Link
             href="/admin/works"
-            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
-              pathname === '/admin/works' ? 'bg-blue-500/30' : ''
+            className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors ${
+              pathname === '/admin/works' ? 'bg-blue-50 text-blue-600' : ''
             }`}
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -131,8 +125,8 @@ export default function AdminLayout({
           </Link>
           <Link
             href="/admin/contact"
-            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
-              pathname === '/admin/contact' ? 'bg-blue-500/30' : ''
+            className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors ${
+              pathname === '/admin/contact' ? 'bg-blue-50 text-blue-600' : ''
             }`}
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -141,8 +135,8 @@ export default function AdminLayout({
           </Link>
           <Link
             href="/admin/users"
-            className={`flex items-center px-4 py-3 text-white hover:bg-blue-500/20 transition-colors ${
-              pathname === '/admin/users' ? 'bg-blue-500/30' : ''
+            className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-colors ${
+              pathname === '/admin/users' ? 'bg-blue-50 text-blue-600' : ''
             }`}
             onClick={() => setIsSidebarOpen(false)}
           >
