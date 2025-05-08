@@ -179,55 +179,36 @@ export default function AdminLayout({
                 </button>
 
                 {/* User Profile Dropdown */}
-                <div className="relative profile-dropdown">
-                  <button
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex items-center space-x-3 focus:outline-none"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                        <FaUser className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <div className="hidden sm:block text-sm text-left">
-                        <p className="font-medium text-gray-700">{session.user?.name}</p>
-                        <p className="text-gray-500">{session.user?.email}</p>
-                      </div>
+                <div className="relative group">
+                  <button className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <FaUser className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div className="hidden md:block text-left">
+                      <p className="text-sm font-medium text-gray-700">{session?.user?.name}</p>
+                      <p className="text-xs text-gray-500">{session?.user?.email}</p>
                     </div>
                   </button>
-
-                  {/* Dropdown Menu */}
-                  {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900">{session.user?.name}</p>
-                        <p className="text-xs text-gray-500 truncate">{session.user?.email}</p>
-                      </div>
-                      
-                      <Link
-                        href="/admin/profile"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <FaUserCircle className="w-4 h-4 mr-2" />
-                        Profil
-                      </Link>
-                      
-                      <Link
-                        href="/admin/settings"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <FaCog className="w-4 h-4 mr-2" />
-                        Ayarlar
-                      </Link>
-                      
-                      <button
-                        onClick={() => signOut({ callbackUrl: '/admin/login' })}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                      >
-                        <FaSignOutAlt className="w-4 h-4 mr-2" />
-                        Çıkış Yap
-                      </button>
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 hidden group-hover:block border border-gray-100">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{session?.user?.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
                     </div>
-                  )}
+                    <Link
+                      href="/admin/profile"
+                      className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <FaUserCircle className="w-4 h-4 mr-3 text-gray-400" />
+                      Profil
+                    </Link>
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-gray-50 transition-colors"
+                    >
+                      <FaSignOutAlt className="w-4 h-4 mr-3 text-red-400" />
+                      Çıkış Yap
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
