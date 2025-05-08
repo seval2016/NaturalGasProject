@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 export async function GET() {
   try {
@@ -34,13 +35,26 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
-    const category = formData.get('category') as string;
 
-    if (!file || !title || !description || !category) {
+    if (!file) {
       return NextResponse.json(
-        { error: 'Tüm alanlar zorunludur' },
+        { error: 'Görsel zorunludur' },
+        { status: 400 }
+      );
+    }
+
+    // Dosya boyutu kontrolü (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'Dosya boyutu 5MB\'dan büyük olamaz' },
+        { status: 400 }
+      );
+    }
+
+    // Dosya tipi kontrolü
+    if (!file.type.startsWith('image/')) {
+      return NextResponse.json(
+        { error: 'Sadece görsel dosyaları yükleyebilirsiniz' },
         { status: 400 }
       );
     }
@@ -48,15 +62,27 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const fileName = `${Date.now()}-${file.name}`;
-    const path = join(process.cwd(), 'public/uploads', fileName);
-    await writeFile(path, buffer);
+    // Uploads klasörünün varlığını kontrol et
+    const uploadsDir = join(process.cwd(), 'public', 'uploads');
+    if (!existsSync(uploadsDir)) {
+      mkdirSync(uploadsDir, { recursive: true });
+    }
+
+    const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+    const path = join(uploadsDir, fileName);
+
+    try {
+      await writeFile(path, buffer);
+    } catch (writeError) {
+      console.error('Error writing file:', writeError);
+      return NextResponse.json(
+        { error: 'Dosya kaydedilirken bir hata oluştu' },
+        { status: 500 }
+      );
+    }
 
     const work = await prisma.work.create({
       data: {
-        title,
-        description,
-        category,
         image: `/uploads/${fileName}`,
       },
     });
@@ -66,71 +92,6 @@ export async function POST(request: Request) {
     console.error('Error creating work:', error);
     return NextResponse.json(
       { error: 'Çalışma oluşturulurken bir hata oluştu' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(request: Request) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Yetkisiz erişim' },
-        { status: 401 }
-      );
-    }
-
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-
-    if (!id) {
-      return NextResponse.json(
-        { error: 'ID parametresi gerekli' },
-        { status: 400 }
-      );
-    }
-
-    const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
-    const category = formData.get('category') as string;
-
-    if (!title || !description || !category) {
-      return NextResponse.json(
-        { error: 'Tüm alanlar zorunludur' },
-        { status: 400 }
-      );
-    }
-
-    const updateData: any = {
-      title,
-      description,
-      category,
-    };
-
-    if (file) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      const fileName = `${Date.now()}-${file.name}`;
-      const path = join(process.cwd(), 'public/uploads', fileName);
-      await writeFile(path, buffer);
-
-      updateData.image = `/uploads/${fileName}`;
-    }
-
-    const work = await prisma.work.update({
-      where: { id: parseInt(id) },
-      data: updateData,
-    });
-
-    return NextResponse.json(work);
-  } catch (error) {
-    console.error('Error updating work:', error);
-    return NextResponse.json(
-      { error: 'Çalışma güncellenirken bir hata oluştu' },
       { status: 500 }
     );
   }

@@ -1,11 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 import WorksModal from '@/components/WorksModal';
-import worksData from '@/data/works.json';
 import styles from '../styles/contactHero.module.css';
+
+interface Work {
+  id: number;
+  image: string;
+  createdAt: string;
+}
 
 const ContactHero = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [works, setWorks] = useState<Work[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWorks = async () => {
+      try {
+        const response = await fetch('/api/admin/works');
+        if (!response.ok) throw new Error('Çalışmalar alınamadı');
+        const data = await response.json();
+        setWorks(data);
+      } catch (err) {
+        console.error('Çalışmalar yüklenirken hata:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWorks();
+  }, []);
+
   return (
     <section className={styles.section}>
       {/* Left Side */}
@@ -20,14 +45,15 @@ const ContactHero = () => {
             <button
               onClick={() => setModalOpen(true)}
               className={styles.button}
+              disabled={loading || works.length === 0}
             >
-              Yapılan Çalışmalar
+              {loading ? 'Yükleniyor...' : 'Yapılan Çalışmalar'}
             </button>
           </div>
           <WorksModal
             isOpen={modalOpen}
             onClose={() => setModalOpen(false)}
-            images={worksData.images}
+            images={works.map(work => work.image)}
           />
         </div>
       </div>

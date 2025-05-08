@@ -1,319 +1,239 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import ErrorAlert from '@/components/ErrorAlert';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { FaPlus, FaTrash, FaUpload } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface Work {
   id: number;
-  title: string;
-  description: string;
   image: string;
-  category: string;
+  createdAt: string;
 }
 
 export default function WorksPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [selectedWork, setSelectedWork] = useState<Work | null>(null);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/admin/login');
-    } else if (status === 'authenticated') {
-      fetchWorks();
-    }
-  }, [status, router]);
+    fetchWorks();
+  }, []);
 
   const fetchWorks = async () => {
     try {
       const response = await fetch('/api/admin/works');
-      if (!response.ok) throw new Error('Çalışma verileri alınamadı');
+      if (!response.ok) throw new Error('Çalışmalar alınamadı');
       const data = await response.json();
       setWorks(data);
     } catch (err) {
-      setError('Çalışma verileri yüklenirken bir hata oluştu');
+      setError('Çalışmalar yüklenirken bir hata oluştu');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Dosya boyutu 5MB\'dan büyük olamaz');
-        return;
-      }
+    if (!file) return;
 
-      if (!file.type.startsWith('image/')) {
-        setError('Sadece görsel dosyaları yükleyebilirsiniz');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-
-      setFile(file);
-    }
-  };
-
-  const resetForm = () => {
-    setTitle('');
-    setDescription('');
-    setCategory('');
-    setFile(null);
-    setPreviewImage(null);
-    setIsUpdateMode(false);
-    setSelectedWork(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!title || !description || !category) {
-      setError('Lütfen tüm alanları doldurun');
+    // Dosya boyutu kontrolü (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Dosya boyutu 5MB\'dan büyük olamaz');
       return;
     }
 
-    const formData = new FormData();
-    if (file) {
-      formData.append('file', file);
+    // Dosya tipi kontrolü
+    if (!file.type.startsWith('image/')) {
+      setError('Sadece görsel dosyaları yükleyebilirsiniz');
+      return;
     }
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('category', category);
+
+    setSelectedFile(file);
+    setError(null);
+
+    // Önizleme URL'i oluştur
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedFile) {
+      setError('Lütfen bir görsel seçin');
+      return;
+    }
+
+    setIsUploading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
 
     try {
-      const url = isUpdateMode 
-        ? `/api/admin/works?id=${selectedWork?.id}`
-        : '/api/admin/works';
-      
-      const response = await fetch(url, {
-        method: isUpdateMode ? 'PUT' : 'POST',
+      const response = await fetch('/api/admin/works', {
+        method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        const data = await response.text();
-        throw new Error(data || 'İşlem başarısız');
+        const data = await response.json();
+        throw new Error(data.error || 'Yükleme başarısız');
       }
-
-      setSuccess(isUpdateMode ? 'Çalışma başarıyla güncellendi' : 'Çalışma başarıyla eklendi');
-      resetForm();
-      fetchWorks();
+      
+      const newWork = await response.json();
+      setWorks([newWork, ...works]);
+      
+      // Formu sıfırla
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+      setError(err instanceof Error ? err.message : 'Görsel yüklenirken bir hata oluştu');
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const handleUpdate = (work: Work) => {
-    setSelectedWork(work);
-    setTitle(work.title);
-    setDescription(work.description);
-    setCategory(work.category);
-    setPreviewImage(work.image);
-    setIsUpdateMode(true);
-  };
-
   const handleDelete = async (id: number) => {
-    if (!confirm('Bu çalışmayı silmek istediğinizden emin misiniz?')) return;
-    
+    if (!confirm('Bu görseli silmek istediğinizden emin misiniz?')) return;
+
     try {
       const response = await fetch(`/api/admin/works?id=${id}`, {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('Çalışma silinemedi');
-      setSuccess('Çalışma başarıyla silindi');
-      fetchWorks();
+      if (!response.ok) throw new Error('Silme işlemi başarısız');
+      
+      setWorks(works.filter(work => work.id !== id));
     } catch (err) {
-      setError('Çalışma silinirken bir hata oluştu');
+      setError('Görsel silinirken bir hata oluştu');
     }
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Çalışmalar Yönetimi</h1>
-        
-        {error && <ErrorAlert message={error} onClose={() => setError('')} />}
-        {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
-        
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold mb-4">
-            {isUpdateMode ? 'Çalışma Güncelle' : 'Yeni Çalışma Ekle'}
-          </h2>
-          
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Görsel
-              </label>
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6">
-                {previewImage ? (
-                  <div className="relative">
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="max-h-48 rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPreviewImage(null);
-                        setFile(null);
-                      }}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                      id="image-upload"
-                      ref={fileInputRef}
-                    />
-                    <label
-                      htmlFor="image-upload"
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 cursor-pointer"
-                    >
-                      Görsel Seç
-                    </label>
-                    <p className="mt-2 text-sm text-gray-500">
-                      Maksimum dosya boyutu: 5MB
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                Başlık
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                Kategori
-              </label>
-              <input
-                type="text"
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                Açıklama
-              </label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                {isUpdateMode ? 'Güncelle' : 'Ekle'}
-              </button>
-              {isUpdateMode && (
+    <div className="space-y-6">
+      {/* Yükleme Formu */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6">
+            {previewUrl ? (
+              <div className="relative w-full max-w-md">
+                <Image
+                  src={previewUrl}
+                  alt="Önizleme"
+                  width={400}
+                  height={300}
+                  className="rounded-lg object-cover"
+                />
                 <button
                   type="button"
-                  onClick={resetForm}
-                  className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setPreviewUrl(null);
+                    const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+                    if (fileInput) fileInput.value = '';
+                  }}
+                  className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
                 >
-                  İptal
+                  <FaTrash />
                 </button>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="text-center">
+                <FaUpload className="mx-auto h-12 w-12 text-gray-400" />
+                <div className="mt-4">
+                  <label
+                    htmlFor="file-upload"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
+                  >
+                    <FaPlus className="mr-2" />
+                    Görsel Seç
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                </div>
+                <p className="mt-2 text-sm text-gray-500">
+                  PNG, JPG, GIF (max. 5MB)
+                </p>
+              </div>
+            )}
           </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+
+          {selectedFile && (
+            <button
+              type="submit"
+              disabled={isUploading}
+              className="w-full flex justify-center items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isUploading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                  Yükleniyor...
+                </>
+              ) : (
+                'Görseli Yükle'
+              )}
+            </button>
+          )}
         </form>
+      </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <h2 className="text-xl font-semibold p-6 border-b">Mevcut Çalışmalar</h2>
-
+      {/* Görsel Listesi */}
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="p-6 border-b">
+          <h2 className="text-lg font-semibold">Mevcut Görseller</h2>
+        </div>
+        {works.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">Henüz görsel eklenmemiş</p>
+        ) : (
           <div className="divide-y">
             {works.map((work) => (
-              <div key={work.id} className="p-6 flex items-center justify-between">
+              <div key={work.id} className="p-6 flex items-center justify-between hover:bg-gray-50">
                 <div className="flex items-center space-x-4">
-                  <img
-                    src={work.image}
-                    alt={work.title}
-                    className="h-20 w-32 object-cover rounded"
-                  />
+                  <div className="relative w-32 h-20">
+                    <Image
+                      src={work.image}
+                      alt="Çalışma görseli"
+                      fill
+                      className="object-cover rounded"
+                    />
+                  </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">{work.title}</h3>
-                    <p className="text-sm text-gray-500">{work.description}</p>
-                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mt-1">
-                      {work.category}
-                    </span>
+                    <p className="text-sm text-gray-500">
+                      {new Date(work.createdAt).toLocaleDateString('tr-TR')}
+                    </p>
                   </div>
                 </div>
-                <div className="flex space-x-1">
-                  <button
-                    onClick={() => handleUpdate(work)}
-                    className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                    title="Güncelle"
-                  >
-                    <FaEdit className="w-4 h-4" />
-                  </button>
+                <div className="flex space-x-2">
                   <button
                     onClick={() => handleDelete(work.id)}
-                    className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
                     title="Sil"
                   >
                     <FaTrash className="w-4 h-4" />
@@ -322,7 +242,7 @@ export default function WorksPage() {
               </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
