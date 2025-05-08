@@ -70,7 +70,7 @@ export default function AdminLayout({
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-xl shadow-sm">
               <Image
                 src="/images/logo/logo.png"
-                alt="Natural Gas Logo"
+                alt="Şentürk Sıhhi Tesisat Logo"
                 width={48}
                 height={48}
                 className="w-12 h-12"
@@ -179,7 +179,7 @@ export default function AdminLayout({
                 </button>
 
                 {/* User Profile Dropdown */}
-                <div className="relative group">
+                <div className="relative group z-50">
                   <button className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors">
                     <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                       <FaUser className="w-4 h-4 text-blue-600" />
@@ -189,7 +189,7 @@ export default function AdminLayout({
                       <p className="text-xs text-gray-500">{session?.user?.email}</p>
                     </div>
                   </button>
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 hidden group-hover:block border border-gray-100">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 hidden group-hover:block border border-gray-100 z-50">
                     <div className="px-4 py-2 border-b border-gray-100">
                       <p className="text-sm font-medium text-gray-900">{session?.user?.name}</p>
                       <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
@@ -226,7 +226,7 @@ export default function AdminLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
               <div className="text-sm text-gray-500">
-                © {new Date().getFullYear()} Natural Gas Admin Panel
+                © {new Date().getFullYear()} Şentürk Sıhhi Tesisat Admin Panel
               </div>
               <div className="flex items-center space-x-4">
                 <button
