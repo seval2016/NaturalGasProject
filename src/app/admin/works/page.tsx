@@ -5,46 +5,48 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import ErrorAlert from '@/components/ErrorAlert';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
-interface Slide {
+interface Work {
   id: number;
-  image: string;
   title: string;
   description: string;
+  image: string;
+  category: string;
 }
 
-export default function SliderPage() {
+export default function WorksPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [slides, setSlides] = useState<Slide[]>([]);
+  const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [selectedSlide, setSelectedSlide] = useState<Slide | null>(null);
+  const [selectedWork, setSelectedWork] = useState<Work | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/admin/login');
     } else if (status === 'authenticated') {
-      fetchSlides();
+      fetchWorks();
     }
   }, [status, router]);
 
-  const fetchSlides = async () => {
+  const fetchWorks = async () => {
     try {
-      const response = await fetch('/api/admin/slider');
-      if (!response.ok) throw new Error('Slider verileri alınamadı');
+      const response = await fetch('/api/admin/works');
+      if (!response.ok) throw new Error('Çalışma verileri alınamadı');
       const data = await response.json();
-      setSlides(data);
+      setWorks(data);
     } catch (err) {
-      setError('Slider verileri yüklenirken bir hata oluştu');
+      setError('Çalışma verileri yüklenirken bir hata oluştu');
     } finally {
       setLoading(false);
     }
@@ -76,10 +78,11 @@ export default function SliderPage() {
   const resetForm = () => {
     setTitle('');
     setDescription('');
+    setCategory('');
     setFile(null);
     setPreviewImage(null);
     setIsUpdateMode(false);
-    setSelectedSlide(null);
+    setSelectedWork(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -90,7 +93,7 @@ export default function SliderPage() {
     setError('');
     setSuccess('');
 
-    if (!title || !description) {
+    if (!title || !description || !category) {
       setError('Lütfen tüm alanları doldurun');
       return;
     }
@@ -101,11 +104,12 @@ export default function SliderPage() {
     }
     formData.append('title', title);
     formData.append('description', description);
+    formData.append('category', category);
 
     try {
       const url = isUpdateMode 
-        ? `/api/admin/slider?id=${selectedSlide?.id}`
-        : '/api/admin/slider';
+        ? `/api/admin/works?id=${selectedWork?.id}`
+        : '/api/admin/works';
       
       const response = await fetch(url, {
         method: isUpdateMode ? 'PUT' : 'POST',
@@ -117,35 +121,36 @@ export default function SliderPage() {
         throw new Error(data || 'İşlem başarısız');
       }
 
-      setSuccess(isUpdateMode ? 'Slider başarıyla güncellendi' : 'Slider başarıyla eklendi');
+      setSuccess(isUpdateMode ? 'Çalışma başarıyla güncellendi' : 'Çalışma başarıyla eklendi');
       resetForm();
-      fetchSlides();
+      fetchWorks();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     }
   };
 
-  const handleUpdate = (slide: Slide) => {
-    setSelectedSlide(slide);
-    setTitle(slide.title);
-    setDescription(slide.description);
-    setPreviewImage(slide.image);
+  const handleUpdate = (work: Work) => {
+    setSelectedWork(work);
+    setTitle(work.title);
+    setDescription(work.description);
+    setCategory(work.category);
+    setPreviewImage(work.image);
     setIsUpdateMode(true);
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Bu slider öğesini silmek istediğinizden emin misiniz?')) return;
+    if (!confirm('Bu çalışmayı silmek istediğinizden emin misiniz?')) return;
     
     try {
-      const response = await fetch(`/api/admin/slider?id=${id}`, {
+      const response = await fetch(`/api/admin/works?id=${id}`, {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('Slider silinemedi');
-      setSuccess('Slider başarıyla silindi');
-      fetchSlides();
+      if (!response.ok) throw new Error('Çalışma silinemedi');
+      setSuccess('Çalışma başarıyla silindi');
+      fetchWorks();
     } catch (err) {
-      setError('Slider silinirken bir hata oluştu');
+      setError('Çalışma silinirken bir hata oluştu');
     }
   };
 
@@ -156,14 +161,14 @@ export default function SliderPage() {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Slider Yönetimi</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Çalışmalar Yönetimi</h1>
         
         {error && <ErrorAlert message={error} onClose={() => setError('')} />}
         {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
         
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
           <h2 className="text-xl font-semibold mb-4">
-            {isUpdateMode ? 'Slider Güncelle' : 'Yeni Slider Ekle'}
+            {isUpdateMode ? 'Çalışma Güncelle' : 'Yeni Çalışma Ekle'}
           </h2>
           
           <div className="grid grid-cols-1 gap-6">
@@ -231,6 +236,20 @@ export default function SliderPage() {
             </div>
 
             <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                Kategori
+              </label>
+              <input
+                type="text"
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                 Açıklama
               </label>
@@ -265,32 +284,35 @@ export default function SliderPage() {
         </form>
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <h2 className="text-xl font-semibold p-6 border-b">Mevcut Sliderlar</h2>
+          <h2 className="text-xl font-semibold p-6 border-b">Mevcut Çalışmalar</h2>
 
           <div className="divide-y">
-            {slides.map((slide) => (
-              <div key={slide.id} className="p-6 flex items-center justify-between">
+            {works.map((work) => (
+              <div key={work.id} className="p-6 flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <img
-                    src={slide.image}
-                    alt={slide.title}
+                    src={work.image}
+                    alt={work.title}
                     className="h-20 w-32 object-cover rounded"
                   />
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">{slide.title}</h3>
-                    <p className="text-sm text-gray-500">{slide.description}</p>
+                    <h3 className="text-lg font-medium text-gray-900">{work.title}</h3>
+                    <p className="text-sm text-gray-500">{work.description}</p>
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mt-1">
+                      {work.category}
+                    </span>
                   </div>
                 </div>
                 <div className="flex space-x-1">
                   <button
-                    onClick={() => handleUpdate(slide)}
+                    onClick={() => handleUpdate(work)}
                     className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                     title="Güncelle"
                   >
                     <FaEdit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(slide.id)}
+                    onClick={() => handleDelete(work.id)}
                     className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
                     title="Sil"
                   >

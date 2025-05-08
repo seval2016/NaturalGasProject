@@ -19,20 +19,19 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      console.log('Giriş denemesi:', email);
+      
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false,
+        redirect: true,
+        callbackUrl: '/admin'
       });
 
-      if (result?.error) {
-        setError('Geçersiz email veya şifre');
-      } else {
-        router.push('/admin');
-      }
+      console.log('Giriş sonucu:', result);
     } catch (err) {
+      console.error('Login hatası:', err);
       setError('Bir hata oluştu, lütfen tekrar deneyin');
-    } finally {
       setLoading(false);
     }
   };

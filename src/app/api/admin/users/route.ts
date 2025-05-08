@@ -1,39 +1,32 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    // Session kontrolü
     const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Oturum açmanız gerekiyor' },
-        { status: 401 }
-      );
+
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Tüm kullanıcıları getir
     const users = await prisma.user.findMany({
       select: {
         id: true,
         name: true,
         email: true,
         createdAt: true,
+        updatedAt: true,
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
 
-    return NextResponse.json(users || []);
+    return NextResponse.json(users);
   } catch (error) {
-    console.error('Users API Error:', error);
-    return NextResponse.json(
-      { error: 'Kullanıcılar yüklenirken bir hata oluştu' },
-      { status: 500 }
-    );
+    console.error('Error fetching users:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 } 

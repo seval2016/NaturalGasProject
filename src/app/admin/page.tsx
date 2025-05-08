@@ -34,44 +34,6 @@ export default function AdminDashboard() {
           Hoş geldiniz, {session.user?.name}! Bu panelden site içeriğini yönetebilirsiniz.
         </p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Users Card */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Kullanıcı Yönetimi</h2>
-          <p className="text-gray-600 mb-4">Kullanıcıları görüntüle ve yönet</p>
-          <button
-            onClick={() => router.push('/admin/users')}
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-          >
-            Kullanıcıları Görüntüle
-          </button>
-        </div>
-
-        {/* Posts Card */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">İçerik Yönetimi</h2>
-          <p className="text-gray-600 mb-4">Blog yazılarını yönet</p>
-          <button
-            onClick={() => router.push('/admin/posts')}
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-          >
-            Yazıları Görüntüle
-          </button>
-        </div>
-
-        {/* Images Card */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Medya Yönetimi</h2>
-          <p className="text-gray-600 mb-4">Resimleri ve medya dosyalarını yönet</p>
-          <button
-            onClick={() => router.push('/admin/images')}
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-          >
-            Medyayı Görüntüle
-          </button>
-        </div>
-      </div>
     </div>
   );
 } 

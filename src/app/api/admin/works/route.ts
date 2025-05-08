@@ -7,16 +7,16 @@ import { join } from 'path';
 
 export async function GET() {
   try {
-    const slides = await prisma.slide.findMany({
+    const works = await prisma.work.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     });
-    return NextResponse.json(slides);
+    return NextResponse.json(works);
   } catch (error) {
-    console.error('Error fetching slides:', error);
+    console.error('Error fetching works:', error);
     return NextResponse.json(
-      { error: 'Slider verileri alınırken bir hata oluştu' },
+      { error: 'Çalışmalar alınırken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -36,8 +36,9 @@ export async function POST(request: Request) {
     const file = formData.get('file') as File;
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
+    const category = formData.get('category') as string;
 
-    if (!file || !title || !description) {
+    if (!file || !title || !description || !category) {
       return NextResponse.json(
         { error: 'Tüm alanlar zorunludur' },
         { status: 400 }
@@ -51,19 +52,20 @@ export async function POST(request: Request) {
     const path = join(process.cwd(), 'public/uploads', fileName);
     await writeFile(path, buffer);
 
-    const slide = await prisma.slide.create({
+    const work = await prisma.work.create({
       data: {
         title,
         description,
+        category,
         image: `/uploads/${fileName}`,
       },
     });
 
-    return NextResponse.json(slide);
+    return NextResponse.json(work);
   } catch (error) {
-    console.error('Error creating slide:', error);
+    console.error('Error creating work:', error);
     return NextResponse.json(
-      { error: 'Slider oluşturulurken bir hata oluştu' },
+      { error: 'Çalışma oluşturulurken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -93,8 +95,9 @@ export async function PUT(request: Request) {
     const file = formData.get('file') as File;
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
+    const category = formData.get('category') as string;
 
-    if (!title || !description) {
+    if (!title || !description || !category) {
       return NextResponse.json(
         { error: 'Tüm alanlar zorunludur' },
         { status: 400 }
@@ -104,6 +107,7 @@ export async function PUT(request: Request) {
     const updateData: any = {
       title,
       description,
+      category,
     };
 
     if (file) {
@@ -117,16 +121,16 @@ export async function PUT(request: Request) {
       updateData.image = `/uploads/${fileName}`;
     }
 
-    const slide = await prisma.slide.update({
+    const work = await prisma.work.update({
       where: { id: parseInt(id) },
       data: updateData,
     });
 
-    return NextResponse.json(slide);
+    return NextResponse.json(work);
   } catch (error) {
-    console.error('Error updating slide:', error);
+    console.error('Error updating work:', error);
     return NextResponse.json(
-      { error: 'Slider güncellenirken bir hata oluştu' },
+      { error: 'Çalışma güncellenirken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -152,15 +156,15 @@ export async function DELETE(request: Request) {
       );
     }
 
-    await prisma.slide.delete({
+    await prisma.work.delete({
       where: { id: parseInt(id) },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting slide:', error);
+    console.error('Error deleting work:', error);
     return NextResponse.json(
-      { error: 'Slider silinirken bir hata oluştu' },
+      { error: 'Çalışma silinirken bir hata oluştu' },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { hash } from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
 
     // Şifreyi hashle
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hash(password, 10);
 
     // Kullanıcıyı oluştur
     const user = await prisma.user.create({

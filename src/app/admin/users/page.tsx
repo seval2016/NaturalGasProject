@@ -1,57 +1,45 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 interface User {
   id: string;
   name: string;
   email: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export default function UsersPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      if (status === 'loading') return;
-      
-      if (!session) {
-        setError('Oturum açmanız gerekiyor');
-        setLoading(false);
-        return;
-      }
+    if (status === 'unauthenticated') {
+      router.push('/admin/login');
+    } else if (status === 'authenticated') {
+      fetchUsers();
+    }
+  }, [status, router]);
 
-      try {
-        const response = await fetch('/api/admin/users', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.error || 'API yanıtı başarısız');
-        }
-        
-        setUsers(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Kullanıcılar yüklenirken hata oluştu:', error);
-        setError(error instanceof Error ? error.message : 'Kullanıcılar yüklenirken bir hata oluştu');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, [session, status]);
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('/api/admin/users');
+      if (!response.ok) throw new Error('Kullanıcılar yüklenemedi');
+      const data = await response.json();
+      setUsers(data);
+    } catch (err) {
+      setError('Kullanıcılar yüklenirken bir hata oluştu');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (status === 'loading' || loading) {
     return (
@@ -73,46 +61,73 @@ export default function UsersPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Kullanıcı Listesi</h1>
-      
-      {users.length === 0 ? (
-        <p className="text-gray-500">Henüz hiç kullanıcı bulunmuyor.</p>
-      ) : (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ad Soyad
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Kayıt Tarihi
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{user.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
-                      {new Date(user.createdAt).toLocaleDateString('tr-TR')}
-                    </div>
-                  </td>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Kullanıcı Yönetimi</h1>
+        
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Kullanıcı Adı
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Kayıt Tarihi
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Son Güncelleme
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    İşlemler
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {new Date(user.createdAt).toLocaleDateString('tr-TR')}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {new Date(user.updatedAt).toLocaleDateString('tr-TR')}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={() => router.push(`/admin/users/${user.id}`)}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <FaEdit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {/* Silme işlemi */}}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <FaTrash className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 } 

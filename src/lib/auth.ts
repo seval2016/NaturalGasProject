@@ -1,9 +1,10 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import prisma from './prisma';
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -24,33 +25,45 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) {
+          console.log('Email veya şifre eksik');
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email,
+            },
+          });
 
-        if (!user) {
+          if (!user) {
+            console.log('Kullanıcı bulunamadı:', credentials.email);
+            return null;
+          }
+
+          console.log('Kullanıcı bulundu:', user.email);
+
+          const isPasswordValid = await compare(
+            credentials.password,
+            user.password
+          );
+
+          console.log('Şifre doğrulama sonucu:', isPasswordValid);
+
+          if (!isPasswordValid) {
+            console.log('Geçersiz şifre');
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error('Authorize hatası:', error);
           return null;
         }
-
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
       },
     }),
   ],

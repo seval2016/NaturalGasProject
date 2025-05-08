@@ -1,38 +1,38 @@
 [
   {
     "title": "Su Tesisatı",
-    "description": "Su kaçağı, boru döşeme ve arıza onarımı gibi tüm su tesisatı ihtiyaçlarınızda profesyonel çözümler sunuyoruz.",
+    "description": "Su kaçağı tespiti, boru döşeme ve arıza onarımlarında profesyonel çözümler sunuyoruz.",
     "image": "/images/services/su-tesisati.jpg",
     "icon": "FaFaucet"
   },
   {
     "title": "Kalorifer Tesisatı",
-    "description": "Kalorifer sistemlerinin kurulumu, bakımı ve onarımı ile konforlu ısınma çözümleri sağlıyoruz.",
+    "description": "Kalorifer sistemlerinin kurulumu ve bakımı ile evinizde güvenli ve verimli ısınma sağlıyoruz.",
     "image": "/images/services/kalorifer-tesisati.jpg",
     "icon": "FaFireAlt"
   },
   {
-    "title": "Yerden Isıtma Sistemi",
-    "description": "Enerji tasarruflu ve konforlu yerden ısıtma sistemleri ile modern yaşam alanları sunuyoruz.",
-    "image": "/images/services/banyo-tadilat.jpg",
-    "icon": "FaBath"
-  },
-  {
-    "title": "Doğalgaz Proje",
-    "description": "Doğalgaz tesisatı projelendirme süreçlerinizi yasal mevzuatlara uygun şekilde uzman ekibimizle yürütüyoruz.",
-    "image": "/images/services/dogalgaz-proje.jpg",
-    "icon": "FaProjectDiagram"
-  },
-  {
     "title": "Doğalgaz Tesisatı",
-    "description": "Eviniz veya iş yeriniz için güvenli, hızlı ve profesyonel doğalgaz tesisatı kurulum hizmeti veriyoruz.",
+    "description": "Doğalgaz tesisatı kurulumunu uzman ekiplerimizle güvenli ve hızlı şekilde gerçekleştiriyoruz.",
     "image": "/images/services/dogalgaz-tesisati.jpg",
     "icon": "FaGasPump"
   },
   {
+    "title": "Doğalgaz Proje",
+    "description": "Doğalgaz projelendirme işlemlerini mevzuata uygun biçimde eksiksiz olarak hazırlıyoruz.",
+    "image": "/images/services/dogalgaz-proje.jpg",
+    "icon": "FaProjectDiagram"
+  },
+  {
     "title": "Banyo Tadilat",
-    "description": "Banyonuzu baştan sona yenileyerek modern, estetik ve kullanışlı bir yaşam alanına dönüştürüyoruz.",
+    "description": "Banyonuzu modern, estetik ve fonksiyonel hale getirmek için kapsamlı tadilat hizmeti sunuyoruz.",
     "image": "/images/services/banyo-tadilat.jpg",
     "icon": "FaBath"
+  },
+  {
+    "title": "Yerden Isıtma",
+    "description": "Konforlu ve ekonomik ısınma için yerden ısıtma sistemlerini profesyonelce kuruyoruz.",
+    "image": "/images/services/yerden-isitma.jpg",
+    "icon": "FaTemperatureHigh"
   }
 ]

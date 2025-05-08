@@ -6,7 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import SessionWrapper from "@/components/SessionWrapper";
-import { CldUploadWidget } from 'next-cloudinary';
+import { usePathname } from 'next/navigation';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,17 +15,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith('/admin');
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <SessionWrapper>
           <Providers>
             <div className="flex flex-col min-h-screen">
-              <Header />
+              {!isAdminPage && <Header />}
               <main className="flex-1">
                 {children}
               </main>
-              <Footer />
+              {!isAdminPage && <Footer />}
             </div>
           </Providers>
         </SessionWrapper>
