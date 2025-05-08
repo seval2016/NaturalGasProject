@@ -186,212 +186,218 @@ export default function ServicesPage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <div className="flex justify-end items-center mb-6">
-        
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          >
-            <FaPlus className="mr-2" />
-            {showForm ? 'Formu Kapat' : 'Yeni Hizmet Ekle'}
-          </button>
-        </div>
-        
-        {error && <ErrorAlert message={error} onClose={() => setError('')} />}
-        {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
-        
-        {showForm && (
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 className="text-xl font-semibold mb-4">
-              {isUpdateMode ? 'Hizmeti Güncelle' : 'Yeni Hizmet Ekle'}
-            </h2>
+    <div className="space-y-6">
+      <div id="services" className="flex justify-end items-center">
+        <button
+          onClick={() => {
+            resetForm();
+            setShowForm(true);
+          }}
+          className="text-sm font-medium inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          <FaPlus className="mr-2" />
+          Yeni Hizmet Ekle
+        </button>
+      </div>
+
+      <div className="p-6">
+        <div className="mb-8">
+          <div className="flex justify-end items-center mb-6">
+            {error && <ErrorAlert message={error} onClose={() => setError('')} />}
+            {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
             
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Görsel
-                </label>
-                <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6">
-                  {previewImage ? (
-                    <div className="relative">
-                      <img
-                        src={previewImage}
-                        alt="Preview"
-                        className="max-h-48 rounded-lg"
-                      />
+            {showForm && (
+              <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 className="text-xl font-semibold mb-4">
+                  {isUpdateMode ? 'Hizmeti Güncelle' : 'Yeni Hizmet Ekle'}
+                </h2>
+                
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Görsel
+                    </label>
+                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      {previewImage ? (
+                        <div className="relative">
+                          <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="max-h-48 rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewImage(null);
+                              setFile(null);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.value = '';
+                              }
+                            }}
+                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleImageChange}
+                            accept="image/*"
+                            className="hidden"
+                            id="image-upload"
+                          />
+                          <label
+                            htmlFor="image-upload"
+                            className="cursor-pointer bg-gray-50 hover:bg-gray-100 text-gray-600 px-4 py-2 rounded-md transition-colors"
+                          >
+                            Görsel Seç
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Başlık
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Açıklama
+                    </label>
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      İkon
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {iconOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => setIcon(option.value)}
+                          className={`flex items-center p-3 border rounded-md ${
+                            icon === option.value
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-300 hover:border-blue-500'
+                          }`}
+                        >
+                          <span className="mr-2">{option.icon}</span>
+                          <span className="text-sm">{option.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-4">
+                    {isUpdateMode && (
                       <button
                         type="button"
-                        onClick={() => {
-                          setPreviewImage(null);
-                          setFile(null);
-                          if (fileInputRef.current) {
-                            fileInputRef.current.value = '';
-                          }
-                        }}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                        onClick={resetForm}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        İptal
                       </button>
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleImageChange}
-                        accept="image/*"
-                        className="hidden"
-                        id="image-upload"
-                      />
-                      <label
-                        htmlFor="image-upload"
-                        className="cursor-pointer bg-gray-50 hover:bg-gray-100 text-gray-600 px-4 py-2 rounded-md transition-colors"
-                      >
-                        Görsel Seç
-                      </label>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Başlık
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Açıklama
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={4}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  İkon
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {iconOptions.map((option) => (
+                    )}
                     <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setIcon(option.value)}
-                      className={`flex items-center p-3 border rounded-md ${
-                        icon === option.value
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-300 hover:border-blue-500'
-                      }`}
+                      type="submit"
+                      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                     >
-                      <span className="mr-2">{option.icon}</span>
-                      <span className="text-sm">{option.label}</span>
+                      {isUpdateMode ? 'Güncelle' : 'Ekle'}
                     </button>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              </form>
+            )}
 
-              <div className="flex justify-end space-x-4">
-                {isUpdateMode && (
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-                  >
-                    İptal
-                  </button>
-                )}
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
-                >
-                  {isUpdateMode ? 'Güncelle' : 'Ekle'}
-                </button>
-              </div>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Görsel
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Başlık
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Açıklama
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      İkon
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      İşlemler
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {services.map((service) => (
+                    <tr key={service.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          className="h-16 w-16 object-cover rounded"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{service.title}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-500 line-clamp-2">{service.description}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500">
+                          {getIconComponent(service.icon)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex justify-end space-x-2">
+                          <button
+                            onClick={() => handleUpdate(service)}
+                            className="text-gray-500 hover:text-gray-700 transition-colors"
+                            title="Düzenle"
+                          >
+                            <FaEdit className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(service.id)}
+                            className="text-gray-500 hover:text-gray-700 transition-colors"
+                            title="Sil"
+                          >
+                            <FaTrash className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </form>
-        )}
-
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Görsel
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Başlık
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Açıklama
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  İkon
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  İşlemler
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {services.map((service) => (
-                <tr key={service.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="h-16 w-16 object-cover rounded"
-                    />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{service.title}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-500 line-clamp-2">{service.description}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
-                      {getIconComponent(service.icon)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        onClick={() => handleUpdate(service)}
-                        className="text-gray-500 hover:text-gray-700 transition-colors"
-                        title="Düzenle"
-                      >
-                        <FaEdit className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(service.id)}
-                        className="text-gray-500 hover:text-gray-700 transition-colors"
-                        title="Sil"
-                      >
-                        <FaTrash className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          </div>
         </div>
       </div>
     </div>

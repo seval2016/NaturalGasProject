@@ -158,7 +158,7 @@ export default function SliderPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end items-center">
+      <div id="slider" className="flex justify-end items-center">
         <button
           onClick={() => {
             resetForm();

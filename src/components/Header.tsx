@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { FaBars, FaTimes, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import styles from '../styles/header.module.css';
 import { usePathname } from 'next/navigation';
+import { useContact } from '@/context/ContactContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { contactInfo } = useContact();
 
   return (
     <header className={styles.header}>
@@ -28,7 +30,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className={styles.desktopNav}>
             <Link
-              href="/"
+              href="/#home"
               className={`${
                 pathname === '/'
                   ? 'border-blue-500 text-gray-900'
@@ -38,7 +40,7 @@ const Header = () => {
               Ana Sayfa
             </Link>
             <Link
-              href="/hizmetler"
+              href="/#services"
               className={`${
                 pathname === '/hizmetler'
                   ? 'border-blue-500 text-gray-900'
@@ -48,7 +50,7 @@ const Header = () => {
               Hizmetler
             </Link>
             <Link
-              href="/hakkimizda"
+              href="/#about"
               className={`${
                 pathname === '/hakkimizda'
                   ? 'border-blue-500 text-gray-900'
@@ -58,7 +60,7 @@ const Header = () => {
               Hakkımızda
             </Link>
             <Link
-              href="/iletisim"
+              href="/#contact"
               className={`${
                 pathname === '/iletisim'
                   ? 'border-blue-500 text-gray-900'
@@ -70,7 +72,7 @@ const Header = () => {
             {/* Desktop Phone and WhatsApp Buttons */}
             <div className={styles.contactButtons}>
               <button
-                onClick={() => window.open('tel:05424017904')}
+                onClick={() => window.open(`tel:${contactInfo?.phone}`)}
                 className={styles.phoneButton}
                 title="Telefon ile Ara"
               >
@@ -78,7 +80,7 @@ const Header = () => {
                 <span>Ara</span>
               </button>
               <button
-                onClick={() => window.open('https://wa.me/905424017904', '_blank')}
+                onClick={() => window.open(`https://wa.me/${contactInfo?.whatsapp}`, '_blank')}
                 className={styles.whatsappButton}
                 title="WhatsApp ile İletişim"
               >
@@ -105,30 +107,30 @@ const Header = () => {
       {isMenuOpen && (
         <div className={styles.mobileNav}>
           <div className={styles.mobileNavContainer}>
-            <Link href="/" className={styles.mobileNavLink}>
+            <Link href="/#home" className={styles.mobileNavLink}>
               Ana Sayfa
             </Link>
-            <Link href="/about" className={styles.mobileNavLink}>
+            <Link href="/#about" className={styles.mobileNavLink}>
               Hakkımızda
             </Link>
-            <Link href="/services" className={styles.mobileNavLink}>
+            <Link href="/#services" className={styles.mobileNavLink}>
               Hizmetler
             </Link>
-            <Link href="/contact" className={styles.mobileNavLink}>
+            <Link href="/#contact" className={styles.mobileNavLink}>
               İletişim
             </Link>
           </div>
           {/* Mobile Phone and WhatsApp Buttons */}
           <div className={styles.mobileContactButtons}>
             <button
-              onClick={() => window.open('tel:05424017904')}
+              onClick={() => window.open(`tel:${contactInfo?.phone}`)}
               className={styles.mobilePhoneButton}
               title="Telefon ile Ara"
             >
               <FaPhoneAlt className={styles.mobileIcon} />
             </button>
             <button
-              onClick={() => window.open('https://wa.me/905424017904', '_blank')}
+              onClick={() => window.open(`https://wa.me/${contactInfo?.whatsapp}`, '_blank')}
               className={styles.mobileWhatsappButton}
               title="WhatsApp ile İletişim"
             >

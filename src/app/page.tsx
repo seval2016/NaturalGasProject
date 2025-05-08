@@ -37,19 +37,19 @@ export default function Home() {
   return (
     <div className="pt-16">
       <div className="py-3" />
-      <section id="anasayfa">
+      <section id="home">
         {!loading && slides.length > 0 && <Carousel slides={slides} />}
       </section>
       <div className="py-6" />
-      <section id="hizmetler">
+      <section id="services">
         <Services />
       </section>
       <div className="py-6" />
-      <section id="hakkimizda">
+      <section id="about">
         <About />
       </section>
       <div className="py-6" />
-      <section id="iletisim">
+      <section id="contact">
         <ContactHero />
       </section>
     </div>
