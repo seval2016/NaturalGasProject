@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.content}>
+      <div className={styles.content}>
           {/* Company Info */}
           <div className={styles.companyInfo}>
             <Link href="/" className={styles.logoLink}>
@@ -82,12 +82,12 @@ const Footer = () => {
                 </span>
               </li>
             </ul>
-          </div>
+        </div>
 
           {/* Social Media */}
           <div className={styles.socialMedia}>
             <h3 className={styles.sectionTitle}>Sosyal Medya</h3>
-            <div className={styles.socialLinks}>
+          <div className={styles.socialLinks}>
               {contactInfo?.facebook && (
                 <a href={contactInfo.facebook} target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
                   <FaFacebook className={styles.socialIcon} />

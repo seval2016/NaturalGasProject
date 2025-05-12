@@ -1,0 +1,139 @@
+.container {
+  @apply space-y-6;
+}
+
+.header {
+  @apply flex justify-end items-center;
+}
+
+.addButton {
+  @apply inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer;
+}
+
+.addIcon {
+  @apply mr-2;
+}
+
+.formContainer {
+  @apply bg-white p-6 rounded-lg shadow-md;
+}
+
+.formHeader {
+  @apply flex justify-between items-center mb-6;
+}
+
+.formTitle {
+  @apply text-xl font-semibold text-gray-800;
+}
+
+.closeButton {
+  @apply p-2 text-gray-500 hover:text-gray-700 transition-colors;
+}
+
+.form {
+  @apply space-y-6;
+}
+
+.formGroup {
+  @apply space-y-2;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.textarea {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px];
+}
+
+.select {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.imageUpload {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-colors;
+}
+
+.imageUploadContent {
+  @apply flex flex-col items-center justify-center text-center;
+}
+
+.uploadIcon {
+  @apply w-12 h-12 text-gray-400 mb-4;
+}
+
+.uploadText {
+  @apply text-sm text-gray-500 mb-2;
+}
+
+.uploadButton {
+  @apply inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors;
+}
+
+.imagePreview {
+  @apply relative;
+}
+
+.previewImage {
+  @apply w-full h-48 object-cover rounded-lg;
+}
+
+.removeButton {
+  @apply absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors;
+}
+
+.removeIcon {
+  @apply w-4 h-4;
+}
+
+.submitButton {
+  @apply w-full flex justify-center items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors;
+}
+
+.worksGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.workCard {
+  @apply bg-white rounded-lg shadow-md overflow-hidden;
+}
+
+.workImage {
+  @apply relative h-48;
+}
+
+.workImageContent {
+  @apply w-full h-full object-cover;
+}
+
+.workOverlay {
+  @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center space-x-4 opacity-0 hover:opacity-100 transition-opacity;
+}
+
+.workButton {
+  @apply p-2 bg-white text-gray-700 rounded-full hover:bg-blue-600 hover:text-white transition-colors;
+}
+
+.workIcon {
+  @apply w-4 h-4;
+}
+
+.workContent {
+  @apply p-4;
+}
+
+.workTitle {
+  @apply text-lg font-semibold mb-2;
+}
+
+.workDescription {
+  @apply text-sm text-gray-600 mb-2;
+}
+
+.workCategory {
+  @apply inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full;
+} 

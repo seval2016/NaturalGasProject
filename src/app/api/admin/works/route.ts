@@ -6,6 +6,8 @@ import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
   try {
     const works = await prisma.work.findMany({
@@ -17,7 +19,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching works:', error);
     return NextResponse.json(
-      { error: 'Çalışmalar alınırken bir hata oluştu' },
+      { error: 'Çalışmalar getirilirken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -26,9 +28,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json(
-        { error: 'Yetkisiz erişim' },
+        { error: 'Bu işlem için yetkiniz yok' },
         { status: 401 }
       );
     }
@@ -84,6 +87,9 @@ export async function POST(request: Request) {
     const work = await prisma.work.create({
       data: {
         image: `/uploads/${fileName}`,
+        title: 'Çalışma',
+        description: 'Çalışma açıklaması',
+        category: 'Genel'
       },
     });
 
@@ -100,9 +106,10 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json(
-        { error: 'Yetkisiz erişim' },
+        { error: 'Bu işlem için yetkiniz yok' },
         { status: 401 }
       );
     }
@@ -112,7 +119,7 @@ export async function DELETE(request: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { error: 'ID parametresi gerekli' },
+        { error: 'Çalışma ID\'si gerekli' },
         { status: 400 }
       );
     }
@@ -121,7 +128,7 @@ export async function DELETE(request: Request) {
       where: { id: parseInt(id) },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: 'Çalışma başarıyla silindi' });
   } catch (error) {
     console.error('Error deleting work:', error);
     return NextResponse.json(

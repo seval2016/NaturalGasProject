@@ -1,0 +1,162 @@
+.container {
+  @apply space-y-6;
+}
+
+.header {
+  @apply flex justify-between items-center;
+}
+
+.addButton {
+  @apply flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors;
+}
+
+.addIcon {
+  @apply w-5 h-5 mr-2;
+}
+
+.formContainer {
+  @apply bg-white rounded-xl shadow-sm p-6 mb-6;
+}
+
+.formTitle {
+  @apply text-xl font-semibold text-gray-800 mb-6;
+}
+
+.form {
+  @apply space-y-4;
+}
+
+.formGroup {
+  @apply space-y-2;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+}
+
+.formButtons {
+  @apply flex items-center justify-end space-x-3 mt-6;
+}
+
+.submitButton {
+  @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors;
+}
+
+.cancelButton {
+  @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors;
+}
+
+.tableContainer {
+  @apply bg-white rounded-xl shadow-sm overflow-hidden;
+}
+
+.table {
+  @apply min-w-full divide-y divide-gray-200;
+}
+
+.tableHeader {
+  @apply px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.tableCell {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+}
+
+.userInfo {
+  @apply flex items-center space-x-3;
+}
+
+.userIcon {
+  @apply w-4 h-4 text-gray-400;
+}
+
+.actions {
+  @apply flex items-center space-x-2;
+}
+
+.editButton {
+  @apply p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors;
+}
+
+.deleteButton {
+  @apply p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors;
+}
+
+.actionIcon {
+  @apply w-4 h-4;
+}
+
+.deleteDialog {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.dialogContent {
+  @apply bg-white rounded-xl p-6 max-w-md w-full mx-4;
+}
+
+.dialogTitle {
+  @apply text-lg font-semibold text-gray-900 mb-2;
+}
+
+.dialogText {
+  @apply text-sm text-gray-600 mb-6;
+}
+
+.dialogButtons {
+  @apply flex items-center justify-end space-x-3;
+}
+
+.loadingContainer {
+  @apply flex items-center justify-center min-h-[400px];
+}
+
+.loadingSpinner {
+  @apply animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500;
+}
+
+.errorContainer {
+  @apply p-4 bg-red-50 text-red-600 rounded-lg;
+}
+
+.errorText {
+  @apply text-sm;
+}
+
+/* Mobil görünüm için düzenlemeler */
+@media (max-width: 768px) {
+  .tableContainer {
+    @apply -mx-4 sm:mx-0;
+  }
+
+  .tableHeader {
+    @apply px-3 py-2 text-xs;
+  }
+
+  .tableCell {
+    @apply px-3 py-2 text-xs;
+  }
+
+  .userIcon {
+    @apply w-3.5 h-3.5;
+  }
+
+  .formContainer {
+    @apply p-4;
+  }
+
+  .formTitle {
+    @apply text-lg mb-4;
+  }
+
+  .input {
+    @apply py-1.5;
+  }
+
+  .submitButton {
+    @apply py-1.5;
+  }
+} 

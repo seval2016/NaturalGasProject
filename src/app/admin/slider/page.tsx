@@ -1,308 +1,374 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import ErrorAlert from '@/components/ErrorAlert';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaUpload, FaTimes } from 'react-icons/fa';
+import styles from '@/styles/admin/slider.module.css';
+import { createActivity } from '@/lib/activity';
 
-interface Slide {
+interface Slider {
   id: number;
-  image: string;
   title: string;
   description: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function SliderPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [slides, setSlides] = useState<Slide[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [selectedSlide, setSelectedSlide] = useState<Slide | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { data: session } = useSession();
+  const [sliders, setSliders] = useState<Slider[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [editingSlider, setEditingSlider] = useState<Slider | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [sliderToDelete, setSliderToDelete] = useState<Slider | null>(null);
+
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+  });
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/admin/login');
-    } else if (status === 'authenticated') {
-      fetchSlides();
-    }
-  }, [status, router]);
+    fetchSliders();
+  }, []);
 
-  const fetchSlides = async () => {
+  const fetchSliders = async () => {
     try {
       const response = await fetch('/api/admin/slider');
-      if (!response.ok) throw new Error('Slider verileri alınamadı');
+      if (!response.ok) throw new Error('Slider görselleri yüklenirken bir hata oluştu');
       const data = await response.json();
-      setSlides(data);
+      setSliders(data);
     } catch (err) {
-      setError('Slider verileri yüklenirken bir hata oluştu');
+      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setError('Dosya boyutu 5MB\'dan büyük olamaz');
+        alert('Dosya boyutu 5MB\'dan küçük olmalıdır');
         return;
       }
-
-      if (!file.type.startsWith('image/')) {
-        setError('Sadece görsel dosyaları yükleyebilirsiniz');
-        return;
-      }
-
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
+        setPreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
-
-      setFile(file);
     }
   };
 
-  const resetForm = () => {
-    setTitle('');
-    setDescription('');
-    setFile(null);
-    setPreviewImage(null);
-    setIsUpdateMode(false);
-    setSelectedSlide(null);
-    setShowForm(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setIsLoading(true);
+    setError(null);
 
-    if (!title || !description) {
-      setError('Lütfen tüm alanları doldurun');
+    if (!selectedFile && !editingSlider) {
+      setError('Lütfen bir görsel seçin');
+      setIsLoading(false);
       return;
     }
 
-    const formData = new FormData();
-    if (file) {
-      formData.append('file', file);
-    }
-    formData.append('title', title);
-    formData.append('description', description);
-
     try {
-      const url = isUpdateMode 
-        ? `/api/admin/slider?id=${selectedSlide?.id}`
+      const formDataToSend = new FormData();
+      if (selectedFile) {
+        formDataToSend.append('file', selectedFile);
+      }
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+
+      const url = editingSlider 
+        ? `/api/admin/slider?id=${editingSlider.id}`
         : '/api/admin/slider';
       
+      const method = editingSlider ? 'PUT' : 'POST';
+
       const response = await fetch(url, {
-        method: isUpdateMode ? 'PUT' : 'POST',
-        body: formData,
+        method,
+        body: formDataToSend,
       });
 
       if (!response.ok) {
-        const data = await response.text();
-        throw new Error(data || 'İşlem başarısız');
+        throw new Error(editingSlider 
+          ? 'Slider güncellenirken bir hata oluştu'
+          : 'Slider eklenirken bir hata oluştu'
+        );
       }
 
-      setSuccess(isUpdateMode ? 'Slider başarıyla güncellendi' : 'Slider başarıyla eklendi');
+      const data = await response.json();
+      
+      // Aktivite kaydı oluştur
+      await fetch('/api/admin/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: editingSlider ? 'update' : 'create',
+          entityType: 'slide',
+          description: editingSlider 
+            ? `Slider güncellendi: ${formData.title}`
+            : `Yeni slider eklendi: ${formData.title}`,
+          userId: Number(session?.user?.id),
+          slideId: data.id
+        }),
+      });
+
       resetForm();
-      fetchSlides();
+      fetchSliders();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEdit = (slider: Slider) => {
+    setEditingSlider(slider);
+    setFormData({
+      title: slider.title,
+      description: slider.description,
+    });
+    setPreviewUrl(slider.image);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = async (slider: Slider) => {
+    setSliderToDelete(slider);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!sliderToDelete) return;
+
+    if (!confirm('Bu slider\'ı silmek istediğinizden emin misiniz?')) return;
+
+    try {
+      const response = await fetch(`/api/admin/slider?id=${sliderToDelete.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Slider silinirken bir hata oluştu');
+      }
+
+      // Aktivite kaydı oluştur
+      await fetch('/api/admin/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'delete',
+          entityType: 'slide',
+          description: `Slider silindi (ID: ${sliderToDelete.id})`,
+          userId: Number(session?.user?.id),
+          slideId: sliderToDelete.id
+        }),
+      });
+
+      await fetchSliders();
+      setShowDeleteDialog(false);
+      setSliderToDelete(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     }
   };
 
-  const handleUpdate = (slide: Slide) => {
-    setSelectedSlide(slide);
-    setTitle(slide.title);
-    setDescription(slide.description);
-    setPreviewImage(slide.image);
-    setIsUpdateMode(true);
-    setShowForm(true);
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+    });
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setEditingSlider(null);
+    setIsFormOpen(false);
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Bu slider öğesini silmek istediğinizden emin misiniz?')) return;
-    
-    try {
-      const response = await fetch(`/api/admin/slider?id=${id}`, {
-        method: 'DELETE',
-      });
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
-      if (!response.ok) throw new Error('Slider silinemedi');
-      setSuccess('Slider başarıyla silindi');
-      fetchSlides();
-    } catch (err) {
-      setError('Slider silinirken bir hata oluştu');
-    }
-  };
-
-  if (loading) {
-    return <LoadingSpinner />;
+  if (error) {
+    return (
+      <div className="p-4 bg-red-50 text-red-600 rounded-lg">
+        {error}
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <div id="slider" className="flex justify-end items-center">
-        <button
-          onClick={() => {
-            resetForm();
-            setShowForm(true);
-          }}
-          className="text-sm font-medium inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          <FaPlus className="mr-2" />
-          Yeni Slider Ekle 
-        </button>
-      </div>
+    <div className={styles.container}>
+      {isLoading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner} />
+        </div>
+      ) : error ? (
+        <div className={styles.errorContainer}>
+          <p className={styles.errorText}>{error}</p>
+        </div>
+      ) : (
+        <>
+          <div className={styles.header}>
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className={styles.addButton}
+            >
+              <FaPlus className={styles.addIcon} />
+              Yeni Slider
+            </button>
+          </div>
 
-      {error && <ErrorAlert message={error} onClose={() => setError('')} />}
-      {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">{success}</div>}
-      
-      {showForm && (
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Görsel
-              </label>
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6">
-                {previewImage ? (
-                  <div className="relative">
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="max-h-48 rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPreviewImage(null);
-                        setFile(null);
-                      }}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="text-center">
+          {isFormOpen && (
+            <div className={styles.formContainer}>
+              <h2 className={styles.formTitle}>
+                {editingSlider ? 'Slider\'ı Düzenle' : 'Yeni Slider Ekle'}
+              </h2>
+              <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="title" className={styles.label}>Başlık</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="description" className={styles.label}>Açıklama</label>
+                  <textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className={styles.textarea}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Görsel</label>
+                  <div 
+                    className={styles.imageUpload}
+                    onClick={() => document.getElementById('image-upload')?.click()}
+                  >
+                    {previewUrl ? (
+                      <div className={styles.imagePreview}>
+                        <img 
+                          src={previewUrl} 
+                          alt="Preview" 
+                          className={styles.previewImage}
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedFile(null);
+                            setPreviewUrl(null);
+                          }}
+                          className={styles.removeButton}
+                        >
+                          <FaTimes className={styles.removeIcon} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className={styles.imageUploadContent}>
+                        <FaUpload className={styles.uploadIcon} />
+                        <p className={styles.uploadText}>
+                          Görsel yüklemek için tıklayın veya sürükleyin
+                        </p>
+                        <span className={styles.uploadButton}>Görsel Seç</span>
+                      </div>
+                    )}
                     <input
+                      id="image-upload"
                       type="file"
                       accept="image/*"
-                      onChange={handleImageChange}
-                      ref={fileInputRef}
+                      onChange={handleFileChange}
                       className="hidden"
-                      id="file-upload"
                     />
-                    <label
-                      htmlFor="file-upload"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer transition-colors"
-                    >
-                      <FaPlus className="mr-2" />
-                      Görsel Seç
-                    </label>
-                    <p className="mt-2 text-sm text-gray-500">
-                      PNG, JPG, GIF (max. 5MB)
-                    </p>
                   </div>
-                )}
-              </div>
-            </div>
+                </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Başlık
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Slider başlığı"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Açıklama
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={4}
-                placeholder="Slider açıklaması"
-              />
-            </div>
-
-            <div className="flex justify-end space-x-4">
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
-              >
-                İptal
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-              >
-                {isUpdateMode ? 'Güncelle' : 'Kaydet'}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {slides.map((slide) => (
-          <div key={slide.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="relative">
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 flex space-x-2">
-                <button
-                  onClick={() => handleUpdate(slide)}
-                  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-                >
-                  <FaEdit className="w-4 h-4" />
+                <button type="submit" className={styles.submitButton}>
+                  {editingSlider ? 'Güncelle' : 'Ekle'}
                 </button>
-                <button
-                  onClick={() => handleDelete(slide.id)}
-                  className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
-                >
-                  <FaTrash className="w-4 h-4" />
-                </button>
+              </form>
+            </div>
+          )}
+
+          <div className={styles.slidersGrid}>
+            {sliders.map((slider) => (
+              <div key={slider.id} className={styles.sliderCard}>
+                <div className={styles.sliderImage}>
+                  <img 
+                    src={slider.image} 
+                    alt={slider.title}
+                    className={styles.sliderImageContent}
+                  />
+                  <div className={styles.sliderOverlay}>
+                    <button
+                      onClick={() => handleEdit(slider)}
+                      className={styles.sliderButton}
+                    >
+                      <FaEdit className={styles.sliderIcon} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(slider)}
+                      className={styles.sliderButton}
+                    >
+                      <FaTrash className={styles.sliderIcon} />
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.sliderContent}>
+                  <h3 className={styles.sliderTitle}>{slider.title}</h3>
+                  <p className={styles.sliderDescription}>{slider.description}</p>
+                </div>
               </div>
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{slide.title}</h3>
-              <p className="text-gray-600 text-sm">{slide.description}</p>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+
+          {showDeleteDialog && (
+            <div className={styles.deleteDialog}>
+              <div className={styles.dialogContent}>
+                <h3 className={styles.dialogTitle}>Slider\'ı Sil</h3>
+                <p className={styles.dialogText}>
+                  Bu slider\'ı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+                </p>
+                <div className={styles.dialogButtons}>
+                  <button
+                    onClick={() => setShowDeleteDialog(false)}
+                    className={styles.cancelButton}
+                  >
+                    İptal
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className={styles.deleteButton}
+                  >
+                    Sil
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 } 

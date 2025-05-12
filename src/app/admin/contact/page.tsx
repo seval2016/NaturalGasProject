@@ -16,6 +16,7 @@ interface ContactInfo {
   facebook?: string;
   instagram?: string;
   twitter?: string;
+  updatedAt: string;
 }
 
 export default function ContactPage() {
@@ -52,6 +53,7 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     setError('');
     setSuccess('');
 
@@ -67,30 +69,36 @@ export default function ContactPage() {
     };
 
     try {
-      const response = await fetch('/api/admin/contact', {
-        method: contactInfo ? 'PUT' : 'POST',
+      const method = contactInfo ? 'PUT' : 'POST';
+      const url = '/api/admin/contact';
+      const body = contactInfo ? { ...data, id: contactInfo.id } : data;
+
+      console.log('Sending request:', { method, url, body });
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(body),
       });
 
-      const responseData = await response.json();
-
       if (!response.ok) {
-        console.error('API Error:', responseData);
-        throw new Error(
-          responseData.details 
-            ? `${responseData.error}\n${responseData.details}`
-            : responseData.error || 'İşlem başarısız'
-        );
+        const errorData = await response.json();
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || 'İletişim bilgileri güncellenirken bir hata oluştu');
       }
 
+      const responseData = await response.json();
+      console.log('API Response:', responseData);
+      
       setSuccess('İletişim bilgileri başarıyla güncellendi');
-      fetchContactInfo();
+      await fetchContactInfo();
     } catch (err) {
-      console.error('Submit Error:', err);
+      console.error('Form Error:', err);
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,7 +109,14 @@ export default function ContactPage() {
   return (
     <div className="space-y-6">
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-6">İletişim Bilgileri</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold">İletişim Bilgileri</h2>
+          {contactInfo && (
+            <span className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">
+              Son güncelleme: {new Date(contactInfo.updatedAt).toLocaleDateString('tr-TR')}
+            </span>
+          )}
+        </div>
         
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
@@ -250,12 +265,19 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => fetchContactInfo()}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+            >
+              İptal
+            </button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
-              Kaydet
+              {contactInfo ? 'Güncelle' : 'Kaydet'}
             </button>
           </div>
         </form>

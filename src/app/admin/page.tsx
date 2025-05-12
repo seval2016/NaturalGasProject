@@ -1,14 +1,52 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { FaUsers, FaImages, FaCogs, FaEnvelope, FaBriefcase } from 'react-icons/fa';
+import { FaUsers, FaImages, FaCogs, FaEnvelope, FaBriefcase, FaTools, FaAddressBook, FaClock } from 'react-icons/fa';
+import Link from 'next/link';
+import styles from '@/styles/admin/dashboard.module.css';
 
-export default function DashboardPage() {
+interface Activity {
+  id: number;
+  action: string;
+  entityType: string;
+  description: string;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+  };
+}
+
+export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (status === 'loading') {
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/admin/login');
+    } else if (status === 'authenticated') {
+      fetchActivities();
+    }
+  }, [status, router]);
+
+  const fetchActivities = async () => {
+    try {
+      const response = await fetch('/api/admin/activities');
+      if (!response.ok) throw new Error('Aktiviteler alınamadı');
+      const data = await response.json();
+      setActivities(data);
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -43,38 +81,69 @@ export default function DashboardPage() {
     },
   ];
 
+  const getActionColor = (action: string) => {
+    switch (action) {
+      case 'create':
+        return 'text-green-600';
+      case 'update':
+        return 'text-blue-600';
+      case 'delete':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
+  const getEntityIcon = (entityType: string) => {
+    switch (entityType) {
+      case 'user':
+        return <FaUsers className="w-4 h-4" />;
+      case 'slide':
+        return <FaImages className="w-4 h-4" />;
+      case 'service':
+        return <FaTools className="w-4 h-4" />;
+      case 'work':
+        return <FaBriefcase className="w-4 h-4" />;
+      case 'contact':
+        return <FaAddressBook className="w-4 h-4" />;
+      default:
+        return <FaClock className="w-4 h-4" />;
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className={styles.container}>
       {/* Hoşgeldiniz Kartı */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-6 text-white">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <h1 className="text-2xl font-bold mb-2">Hoş Geldiniz, {session?.user?.name}!</h1>
-            <p className="text-blue-100">Doğalgaz tesisatı yönetim panelinize hoş geldiniz.</p>
+      <div className={styles.welcomeCard}>
+        <div className={styles.welcomeContent}>
+          <div className={styles.welcomeText}>
+            <h1 className={styles.welcomeTitle}>
+              Hoş Geldiniz, {session?.user?.name}!
+            </h1>
+            <p className={styles.welcomeSubtitle}>
+              Doğalgaz tesisatı yönetim panelinize hoş geldiniz.
+            </p>
           </div>
-          <div className="w-full md:w-1/3">
+          <div className={styles.welcomeImage}>
             <img
-              src="/admin-illustration.svg"
+              src="/images/admin-illustration.svg"
               alt="Admin Dashboard"
-              className="w-full h-auto"
+              className={styles.illustration}
             />
           </div>
         </div>
       </div>
 
       {/* İstatistik Kartları */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={styles.statsGrid}>
         {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-          >
-            <div className="flex items-center justify-between">
+          <div key={index} className={styles.statCard}>
+            <div className={styles.statContent}>
               <div>
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">{stat.value}</p>
+                <p className={styles.statTitle}>{stat.title}</p>
+                <p className={styles.statValue}>{stat.value}</p>
               </div>
-              <div className={`${stat.color} p-3 rounded-lg text-white`}>
+              <div className={`${stat.color} ${styles.statIcon}`}>
                 {stat.icon}
               </div>
             </div>
@@ -82,66 +151,54 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Hızlı Erişim Kartları */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Hızlı Erişim</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={() => router.push('/admin/slider')}
-              className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <FaImages className="w-5 h-5 text-blue-600" />
+      {/* Hızlı Erişim ve Son Aktiviteler */}
+      <div className={styles.quickAccessGrid}>
+        <div className={styles.quickAccessCard}>
+          <h2 className={styles.cardTitle}>Hızlı Erişim</h2>
+          <div className={styles.quickAccessButtons}>
+            <Link href="/admin/slider" className={styles.quickAccessButton}>
+              <FaImages className={styles.buttonIcon} />
               <span>Slider Yönetimi</span>
-            </button>
-            <button
-              onClick={() => router.push('/admin/services')}
-              className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <FaCogs className="w-5 h-5 text-green-600" />
+            </Link>
+            <Link href="/admin/services" className={styles.quickAccessButton}>
+              <FaCogs className={styles.buttonIcon} />
               <span>Hizmetler</span>
-            </button>
-            <button
-              onClick={() => router.push('/admin/works')}
-              className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <FaBriefcase className="w-5 h-5 text-purple-600" />
+            </Link>
+            <Link href="/admin/works" className={styles.quickAccessButton}>
+              <FaBriefcase className={styles.buttonIcon} />
               <span>Çalışmalar</span>
-            </button>
-            <button
-              onClick={() => router.push('/admin/contact')}
-              className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <FaEnvelope className="w-5 h-5 text-yellow-600" />
+            </Link>
+            <Link href="/admin/contact" className={styles.quickAccessButton}>
+              <FaEnvelope className={styles.buttonIcon} />
               <span>İletişim</span>
-            </button>
+            </Link>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Son Aktiviteler</h2>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <div>
-                <p className="text-sm text-gray-600">Yeni slider görseli eklendi</p>
-                <p className="text-xs text-gray-400">2 saat önce</p>
+        <div className={styles.activitiesCard}>
+          <h2 className={styles.cardTitle}>Son Aktiviteler</h2>
+          <div className={styles.activitiesList}>
+            {activities.map((activity) => (
+              <div key={activity.id} className={styles.activityItem}>
+                <div className="flex items-center space-x-2">
+                  {getEntityIcon(activity.entityType)}
+                  <span className={`font-medium ${getActionColor(activity.action)}`}>
+                    {activity.action === 'create' && 'Oluşturuldu'}
+                    {activity.action === 'update' && 'Güncellendi'}
+                    {activity.action === 'delete' && 'Silindi'}
+                  </span>
+                </div>
+                <p className={styles.activityDescription}>{activity.description}</p>
+                <div className={styles.activityMeta}>
+                  <span className={styles.activityUser}>
+                    {activity.user.name || activity.user.email}
+                  </span>
+                  <span className={styles.activityTime}>
+                    {new Date(activity.createdAt).toLocaleString('tr-TR')}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <div>
-                <p className="text-sm text-gray-600">Hizmet güncellendi</p>
-                <p className="text-xs text-gray-400">3 saat önce</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-              <div>
-                <p className="text-sm text-gray-600">Yeni çalışma eklendi</p>
-                <p className="text-xs text-gray-400">5 saat önce</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

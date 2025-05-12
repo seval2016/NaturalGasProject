@@ -1,18 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
+import { createActivity } from '@/lib/activity';
 
 export async function GET() {
   try {
-    const contactInfo = await prisma.contact.findFirst();
-    return NextResponse.json(contactInfo);
+    const contact = await prisma.contact.findFirst();
+    return NextResponse.json(contact);
   } catch (error) {
-    console.error('GET Error:', error);
+    console.error('Error fetching contact:', error);
     return NextResponse.json(
-      { error: 'İletişim bilgileri alınamadı', details: error instanceof Error ? error.message : 'Bilinmeyen hata' },
+      { error: 'İletişim bilgileri alınırken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -21,65 +20,87 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session?.user?.email) {
       return NextResponse.json(
-        { error: 'Yetkisiz erişim' },
+        { error: 'Bu işlem için yetkiniz yok' },
         { status: 401 }
       );
     }
 
-    const data = await request.json();
-    console.log('Received data:', data);
-    
-    // Veri doğrulama
-    if (!data.phone || !data.whatsapp || !data.email || !data.address) {
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
+
+    if (!user) {
       return NextResponse.json(
-        { error: 'Gerekli alanlar eksik', details: 'Telefon, WhatsApp, E-posta ve Adres alanları zorunludur' },
+        { error: 'Kullanıcı bulunamadı' },
+        { status: 404 }
+      );
+    }
+
+    const data = await request.json();
+    const { phone, whatsapp, email, address, facebook, instagram, twitter } = data;
+
+    if (!phone || !whatsapp || !email || !address) {
+      return NextResponse.json(
+        { error: 'Telefon, WhatsApp, e-posta ve adres alanları zorunludur' },
         { status: 400 }
       );
     }
 
-    try {
-      const contactInfo = await prisma.contact.create({
+    const existingContact = await prisma.contact.findFirst();
+
+    let contact;
+    if (existingContact) {
+      contact = await prisma.contact.update({
+        where: { id: existingContact.id },
         data: {
-          phone: data.phone,
-          whatsapp: data.whatsapp,
-          email: data.email,
-          address: data.address,
-          facebook: data.facebook || null,
-          instagram: data.instagram || null,
-          twitter: data.twitter || null,
+          phone,
+          whatsapp,
+          email,
+          address,
+          facebook,
+          instagram,
+          twitter,
         },
       });
-      console.log('Created contact info:', contactInfo);
-      return NextResponse.json(contactInfo);
-    } catch (dbError) {
-      console.error('Database Error:', dbError);
-      if (dbError instanceof Error) {
-        // Prisma hata kodlarını kontrol et
-        if (dbError.message.includes('Unique constraint')) {
-          return NextResponse.json(
-            { error: 'Bu iletişim bilgileri zaten mevcut', details: dbError.message },
-            { status: 400 }
-          );
-        }
-        if (dbError.message.includes('Invalid data')) {
-          return NextResponse.json(
-            { error: 'Geçersiz veri formatı', details: dbError.message },
-            { status: 400 }
-          );
-        }
-      }
-      throw dbError; // Diğer hataları yukarı fırlat
+
+      // Aktivite kaydı oluştur
+      await createActivity({
+        userId: user.id,
+        action: 'update',
+        entityType: 'contact',
+        description: 'İletişim bilgileri güncellendi',
+        contactId: contact.id
+      });
+    } else {
+      contact = await prisma.contact.create({
+        data: {
+          phone,
+          whatsapp,
+          email,
+          address,
+          facebook,
+          instagram,
+          twitter,
+        },
+      });
+
+      // Aktivite kaydı oluştur
+      await createActivity({
+        userId: user.id,
+        action: 'create',
+        entityType: 'contact',
+        description: 'İletişim bilgileri oluşturuldu',
+        contactId: contact.id
+      });
     }
+
+    return NextResponse.json(contact);
   } catch (error) {
-    console.error('POST Error:', error);
+    console.error('Error saving contact:', error);
     return NextResponse.json(
-      { 
-        error: 'İletişim bilgileri kaydedilemedi', 
-        details: error instanceof Error ? error.message : 'Bilinmeyen hata',
-        stack: error instanceof Error ? error.stack : undefined
-      },
+      { error: 'İletişim bilgileri kaydedilirken bir hata oluştu' },
       { status: 500 }
     );
   }
@@ -88,76 +109,61 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session?.user?.email) {
       return NextResponse.json(
-        { error: 'Yetkisiz erişim' },
+        { error: 'Bu işlem için yetkiniz yok' },
         { status: 401 }
       );
     }
 
-    const data = await request.json();
-    console.log('Received data:', data);
-    
-    // Veri doğrulama
-    if (!data.phone || !data.whatsapp || !data.email || !data.address) {
-      return NextResponse.json(
-        { error: 'Gerekli alanlar eksik', details: 'Telefon, WhatsApp, E-posta ve Adres alanları zorunludur' },
-        { status: 400 }
-      );
-    }
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
 
-    const existingContact = await prisma.contact.findFirst();
-    console.log('Existing contact:', existingContact);
-
-    if (!existingContact) {
+    if (!user) {
       return NextResponse.json(
-        { error: 'İletişim bilgileri bulunamadı' },
+        { error: 'Kullanıcı bulunamadı' },
         { status: 404 }
       );
     }
 
-    try {
-      const contactInfo = await prisma.contact.update({
-        where: { id: existingContact.id },
-        data: {
-          phone: data.phone,
-          whatsapp: data.whatsapp,
-          email: data.email,
-          address: data.address,
-          facebook: data.facebook || null,
-          instagram: data.instagram || null,
-          twitter: data.twitter || null,
-        },
-      });
-      console.log('Updated contact info:', contactInfo);
-      return NextResponse.json(contactInfo);
-    } catch (dbError) {
-      console.error('Database Error:', dbError);
-      if (dbError instanceof Error) {
-        // Prisma hata kodlarını kontrol et
-        if (dbError.message.includes('Unique constraint')) {
-          return NextResponse.json(
-            { error: 'Bu iletişim bilgileri zaten mevcut', details: dbError.message },
-            { status: 400 }
-          );
-        }
-        if (dbError.message.includes('Invalid data')) {
-          return NextResponse.json(
-            { error: 'Geçersiz veri formatı', details: dbError.message },
-            { status: 400 }
-          );
-        }
-      }
-      throw dbError; // Diğer hataları yukarı fırlat
+    const data = await request.json();
+    const { id, phone, whatsapp, email, address, facebook, instagram, twitter } = data;
+
+    if (!id || !phone || !whatsapp || !email || !address) {
+      return NextResponse.json(
+        { error: 'ID, telefon, WhatsApp, e-posta ve adres alanları zorunludur' },
+        { status: 400 }
+      );
     }
-  } catch (error) {
-    console.error('PUT Error:', error);
-    return NextResponse.json(
-      { 
-        error: 'İletişim bilgileri güncellenemedi', 
-        details: error instanceof Error ? error.message : 'Bilinmeyen hata',
-        stack: error instanceof Error ? error.stack : undefined
+
+    const contact = await prisma.contact.update({
+      where: { id },
+      data: {
+        phone,
+        whatsapp,
+        email,
+        address,
+        facebook,
+        instagram,
+        twitter,
       },
+    });
+
+    // Aktivite kaydı oluştur
+    await createActivity({
+      userId: user.id,
+      action: 'update',
+      entityType: 'contact',
+      description: 'İletişim bilgileri güncellendi',
+      contactId: contact.id
+    });
+
+    return NextResponse.json(contact);
+  } catch (error) {
+    console.error('Error updating contact:', error);
+    return NextResponse.json(
+      { error: 'İletişim bilgileri güncellenirken bir hata oluştu' },
       { status: 500 }
     );
   }

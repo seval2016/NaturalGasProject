@@ -1,0 +1,187 @@
+.container {
+  @apply space-y-6;
+}
+
+.header {
+  @apply flex justify-end mb-6;
+}
+
+.title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.addButton {
+  @apply flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm;
+}
+
+.addIcon {
+  @apply w-4 h-4;
+}
+
+.addButton:hover .addIcon {
+  @apply transform rotate-90;
+}
+
+.formContainer {
+  @apply bg-white rounded-xl shadow-sm p-4 sm:p-6;
+}
+
+.formTitle {
+  @apply text-xl font-semibold text-gray-800 mb-6;
+}
+
+.form {
+  @apply space-y-6;
+}
+
+.formGroup {
+  @apply space-y-2;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.textarea {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px];
+}
+
+.imageUpload {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition-colors;
+}
+
+.imageUploadContent {
+  @apply flex flex-col items-center space-y-2;
+}
+
+.uploadIcon {
+  @apply w-12 h-12 text-gray-400;
+}
+
+.uploadText {
+  @apply text-sm text-gray-500;
+}
+
+.uploadButton {
+  @apply text-blue-600 hover:text-blue-700 font-medium;
+}
+
+.imagePreview {
+  @apply relative w-full h-48 rounded-lg overflow-hidden;
+}
+
+.previewImage {
+  @apply w-full h-full object-cover;
+}
+
+.removeButton {
+  @apply absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors;
+}
+
+.removeIcon {
+  @apply w-4 h-4;
+}
+
+.iconSelect {
+  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4;
+}
+
+.iconOption {
+  @apply flex flex-col items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-500 transition-colors;
+}
+
+.iconOptionSelected {
+  @apply border-blue-500 bg-blue-50;
+}
+
+.iconWrapper {
+  @apply w-8 h-8 text-gray-600 mb-2;
+}
+
+.iconName {
+  @apply text-xs text-gray-500 text-center;
+}
+
+.submitButton {
+  @apply w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors;
+}
+
+.servicesGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.serviceCard {
+  @apply bg-white rounded-xl shadow-sm overflow-hidden;
+}
+
+.serviceImage {
+  @apply relative w-full h-48;
+}
+
+.serviceImageContent {
+  @apply w-full h-full object-cover;
+}
+
+.serviceOverlay {
+  @apply absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center space-x-2;
+}
+
+.serviceButton {
+  @apply bg-white text-gray-800 p-2 rounded-full hover:bg-blue-50 transition-colors;
+}
+
+.serviceIcon {
+  @apply w-5 h-5;
+}
+
+.serviceContent {
+  @apply p-4;
+}
+
+.serviceTitle {
+  @apply text-lg font-semibold text-gray-800 mb-2;
+}
+
+.serviceDescription {
+  @apply text-gray-600 text-sm line-clamp-2;
+}
+
+.serviceIconWrapper {
+  @apply mt-4 flex items-center space-x-2 text-gray-500;
+}
+
+.serviceIconText {
+  @apply text-sm;
+}
+
+.deleteDialog {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.dialogContent {
+  @apply bg-white rounded-xl p-6 max-w-md w-full mx-4;
+}
+
+.dialogTitle {
+  @apply text-xl font-semibold text-gray-800 mb-4;
+}
+
+.dialogText {
+  @apply text-gray-600 mb-6;
+}
+
+.dialogButtons {
+  @apply flex justify-end space-x-3;
+}
+
+.cancelButton {
+  @apply px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors;
+}
+
+.deleteButton {
+  @apply px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors;
+} 

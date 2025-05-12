@@ -1,0 +1,143 @@
+.container {
+  @apply p-6 max-w-7xl mx-auto space-y-6;
+}
+
+.welcomeCard {
+  @apply bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-6 text-white;
+}
+
+.welcomeContent {
+  @apply flex flex-col md:flex-row justify-between items-center;
+}
+
+.welcomeText {
+  @apply mb-4 md:mb-0;
+}
+
+.welcomeTitle {
+  @apply text-2xl font-bold mb-2;
+}
+
+.welcomeSubtitle {
+  @apply text-blue-100;
+}
+
+.welcomeImage {
+  @apply w-full md:w-1/3;
+}
+
+.illustration {
+  @apply w-full h-auto;
+}
+
+.statsGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4;
+}
+
+.statCard {
+  @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow;
+}
+
+.statContent {
+  @apply flex items-center justify-between;
+}
+
+.statTitle {
+  @apply text-sm font-medium text-gray-600;
+}
+
+.statValue {
+  @apply text-2xl font-semibold text-gray-900 mt-1;
+}
+
+.statIcon {
+  @apply p-3 rounded-lg text-white;
+}
+
+.quickAccessGrid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.quickAccessCard {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.cardTitle {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+.quickAccessButtons {
+  @apply grid grid-cols-2 gap-4;
+}
+
+.quickAccessButton {
+  @apply flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors;
+}
+
+.buttonIcon {
+  @apply w-5 h-5 text-blue-600;
+}
+
+.activitiesCard {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.activitiesList {
+  @apply space-y-4 max-h-[180px] overflow-y-auto pr-2;
+}
+
+.activityItem {
+  @apply p-4 bg-gray-50 rounded-lg;
+}
+
+.activityDescription {
+  @apply mt-2 text-gray-700;
+}
+
+.activityMeta {
+  @apply mt-2 flex items-center justify-between text-sm text-gray-500;
+}
+
+.activityUser {
+  @apply font-medium text-gray-600;
+}
+
+.activityTime {
+  @apply text-gray-500;
+}
+
+/* Scrollbar Stilleri */
+.activitiesList::-webkit-scrollbar {
+  @apply w-2;
+}
+
+.activitiesList::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+.activitiesList::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full hover:bg-gray-400;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    @apply p-4;
+  }
+
+  .statsGrid {
+    @apply grid-cols-1;
+  }
+
+  .quickAccessGrid {
+    @apply grid-cols-1;
+  }
+
+  .quickAccessButtons {
+    @apply grid-cols-1;
+  }
+
+  .statCard {
+    @apply p-4;
+  }
+} 

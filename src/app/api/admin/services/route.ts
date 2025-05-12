@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma';
 import { writeFile, unlink } from 'fs/promises';
 import { join } from 'path';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
   try {
     const services = await prisma.service.findMany({
