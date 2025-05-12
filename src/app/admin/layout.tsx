@@ -215,7 +215,7 @@ export default function AdminLayout({
           </div>
         </header>
 
-        <main className="flex-1 bg-gray-100 overflow-hidden">
+        <main className="flex-1 bg-gray-100 overflow-hidden lg:overflow-hidden overflow-y-auto">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             {children}
           </div>
